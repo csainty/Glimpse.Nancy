@@ -23,6 +23,7 @@ namespace Glimpse.Nancy
 
             pipelines.BeforeRequest.AddItemToStartOfPipeline(ctx =>
             {
+                // TODO: Read this url from the web.config
                 if (ctx.Request.Path.ToLower() != "/glimpse.axd") return null;
 
                 var runtime = GetRuntime(ctx);

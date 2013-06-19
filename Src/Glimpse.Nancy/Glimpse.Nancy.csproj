@@ -51,6 +51,7 @@
     <Compile Include="NancyFrameworkProvider.cs" />
     <Compile Include="NancyRequestMetadata.cs" />
     <Compile Include="NancyServiceLocator.cs" />
+    <Compile Include="PreBodyTagFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using Glimpse.Core.Extensibility;
 using Glimpse.Core.Framework;
@@ -33,7 +34,20 @@ namespace Glimpse.Nancy
 
         public void InjectHttpResponseBody(string htmlSnippet)
         {
-            throw new NotImplementedException();
+            var capturedContent = new MemoryStream();
+            this.context.Response.Contents(capturedContent);
+            capturedContent.Seek(0, SeekOrigin.Begin);
+                
+            // TODO: We need a logger
+            // TODO: UTF8?
+            this.context.Response.Contents = s =>
+            {
+                using (var filter = new PreBodyTagFilter(htmlSnippet, s, Encoding.UTF8, null))
+                {
+                    capturedContent.CopyTo(filter);
+                    capturedContent.Dispose();
+                }
+            };
         }
 
         public IRequestMetadata RequestMetadata
@@ -63,6 +77,7 @@ namespace Glimpse.Nancy
 
         public void WriteHttpResponse(string content)
         {
+            // TODO: UTF8?
             var bytes = Encoding.UTF8.GetBytes(content);
             this.WriteHttpResponse(bytes);
         }

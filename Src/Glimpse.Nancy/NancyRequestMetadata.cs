@@ -22,11 +22,14 @@ namespace Glimpse.Nancy
 
         public string GetCookie(string name)
         {
+            if (!this.context.Request.Cookies.ContainsKey(name)) return "";
+
             return this.context.Request.Cookies[name];
         }
 
         public string GetHttpHeader(string name)
         {
+            // TODO: Should this really be a comma, must be a standard out there
             return String.Join(",", this.context.Request.Headers[name].ToArray());
         }
 
