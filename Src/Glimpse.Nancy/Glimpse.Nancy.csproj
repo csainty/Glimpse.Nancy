@@ -45,6 +45,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GlimpseStartup.cs" />
+    <Compile Include="DictionaryDataStore.cs" />
+    <Compile Include="NancyEndpointConfiguration.cs" />
+    <Compile Include="NancyFrameworkProvider.cs" />
+    <Compile Include="NancyServiceLocator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
