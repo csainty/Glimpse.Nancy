@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="GlimpseStartup.cs" />
     <Compile Include="DictionaryDataStore.cs" />
+    <Compile Include="Models\RequestModel.cs" />
     <Compile Include="NancyEndpointConfiguration.cs" />
     <Compile Include="NancyFrameworkProvider.cs" />
     <Compile Include="NancyRequestMetadata.cs" />
