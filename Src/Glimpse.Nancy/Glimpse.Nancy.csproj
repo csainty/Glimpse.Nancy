@@ -53,9 +53,9 @@
     <Compile Include="NancyFrameworkProvider.cs" />
     <Compile Include="NancyRequestMetadata.cs" />
     <Compile Include="NancyServiceLocator.cs" />
-    <Compile Include="PreBodyTagFilter.cs" />
+    <Compile Include="Filters\PreBodyTagFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TabContextExtensions.cs" />
+    <Compile Include="Extensions\TabContextExtensions.cs" />
     <Compile Include="Tabs\ContentNegotiation.cs" />
     <Compile Include="Tabs\NancyTab.cs" />
     <Compile Include="Tabs\Request.cs" />

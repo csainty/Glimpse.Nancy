@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Glimpse.Core.Extensibility;
 using Glimpse.Core.Framework;
+using Glimpse.Nancy.Filters;
 using Nancy;
-using Nancy.Extensions;
 
 namespace Glimpse.Nancy
 {
@@ -39,7 +38,7 @@ namespace Glimpse.Nancy
             var capturedContent = new MemoryStream();
             this.context.Response.Contents(capturedContent);
             capturedContent.Seek(0, SeekOrigin.Begin);
-                
+
             // TODO: UTF8?
             this.context.Response.Contents = s =>
             {

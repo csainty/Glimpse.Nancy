@@ -3,7 +3,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Glimpse.Core.Extensibility;
 
-namespace Glimpse.Nancy
+namespace Glimpse.Nancy.Filters
 {
     public class PreBodyTagFilter : Stream
     {
