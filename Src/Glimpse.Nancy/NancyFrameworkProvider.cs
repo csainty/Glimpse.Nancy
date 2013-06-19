@@ -15,10 +15,12 @@ namespace Glimpse.Nancy
 
         private readonly NancyContext context;
         private readonly IDataStore contextDataStore;
+        private readonly ILogger logger;
 
-        public NancyFrameworkProvider(NancyContext ctx)
+        public NancyFrameworkProvider(NancyContext ctx, ILogger logger)
         {
             this.context = ctx;
+            this.logger = logger;
             this.contextDataStore = new DictionaryDataStore(ctx.Items);
         }
 
@@ -38,11 +40,10 @@ namespace Glimpse.Nancy
             this.context.Response.Contents(capturedContent);
             capturedContent.Seek(0, SeekOrigin.Begin);
                 
-            // TODO: We need a logger
             // TODO: UTF8?
             this.context.Response.Contents = s =>
             {
-                using (var filter = new PreBodyTagFilter(htmlSnippet, s, Encoding.UTF8, null))
+                using (var filter = new PreBodyTagFilter(htmlSnippet, s, Encoding.UTF8, this.logger))
                 {
                     capturedContent.CopyTo(filter);
                     capturedContent.Dispose();

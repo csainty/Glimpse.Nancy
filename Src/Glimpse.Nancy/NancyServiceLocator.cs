@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Glimpse.Core.Extensibility;
 using Glimpse.Core.Framework;
 using Nancy;
 
@@ -13,6 +14,14 @@ namespace Glimpse.Nancy
             this.context = ctx;
         }
 
+        private ILogger logger;
+
+        internal ILogger Logger
+        {
+            get { return logger ?? (logger = new NullLogger()); }
+            set { logger = value; }
+        }
+
         public ICollection<T> GetAllInstances<T>() where T : class
         {
             return null;
@@ -23,7 +32,7 @@ namespace Glimpse.Nancy
             var type = typeof(T);
             if (type == typeof(IFrameworkProvider))
             {
-                return new NancyFrameworkProvider(this.context) as T;
+                return new NancyFrameworkProvider(this.context, this.Logger) as T;
             }
 
             if (type == typeof(ResourceEndpointConfiguration))

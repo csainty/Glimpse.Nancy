@@ -76,6 +76,7 @@ namespace Glimpse.Nancy
 
             var serviceLocator = new NancyServiceLocator(context);
             var factory = new Factory(serviceLocator);
+            serviceLocator.Logger = factory.InstantiateLogger();
             var runtime = factory.InstantiateRuntime();
             context.Items[RuntimeKey] = runtime;
             return runtime;
