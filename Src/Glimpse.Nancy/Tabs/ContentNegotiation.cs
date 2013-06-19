@@ -3,22 +3,21 @@ using Glimpse.Nancy.Models;
 
 namespace Glimpse.Nancy.Tabs
 {
-    public class Request : NancyTab, IKey
+    public class ContentNegotiation : NancyTab, IKey
     {
         public override object GetData(ITabContext context)
         {
-            var ctx = context.GetNancyContext();
-            return new RequestModel(ctx);
+            return new ContentNegotiationModel(context.GetNancyContext());
         }
 
         public override string Name
         {
-            get { return "Request"; }
+            get { return "Content Negotiation"; }
         }
 
         public string Key
         {
-            get { return "glimpse_nancy_request"; }
+            get { return "glimpse_nancy_contentnegotiation"; }
         }
     }
 }

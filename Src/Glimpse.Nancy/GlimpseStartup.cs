@@ -21,7 +21,7 @@ namespace Glimpse.Nancy
                 return null;
             });
 
-            pipelines.BeforeRequest.AddItemToStartOfPipeline(ctx =>
+            pipelines.BeforeRequest.AddItemToEndOfPipeline(ctx =>
             {
                 // TODO: Read this url from the web.config
                 if (ctx.Request.Path.ToLower() != "/glimpse.axd") return null;

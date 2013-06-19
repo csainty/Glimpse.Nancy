@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title></title>
@@ -7,6 +8,12 @@
     <h1>Hello Nancy, meet Glimpse!</h1>
     <p>
         <a href="/glimpse.axd">Enable Glimpse</a>
+    </p>
+
+    <h2>ViewModel</h2>
+    <p>
+        Foo: @Model.Foo<br />
+        Now: @Model.Now
     </p>
 </body>
 </html>

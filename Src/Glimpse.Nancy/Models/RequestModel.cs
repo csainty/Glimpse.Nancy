@@ -63,7 +63,8 @@ namespace Glimpse.Nancy.Models
                     Name = cookie.Name,
                     Path = cookie.Path,
                     IsSecure = cookie.Secure,
-                    Value = HttpUtility.UrlDecode(cookie.Value)
+                    Value = HttpUtility.UrlDecode(cookie.Value),
+                    HttpOnly = cookie.HttpOnly
                 });
             }
 
@@ -94,6 +95,8 @@ namespace Glimpse.Nancy.Models
             public bool IsSecure { get; set; }
 
             public string Value { get; set; }
+
+            public bool HttpOnly { get; set; }
         }
     }
 }

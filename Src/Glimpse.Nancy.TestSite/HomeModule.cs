@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using Nancy;
+using Nancy.Responses.Negotiation;
 
 namespace Glimpse.Nancy.TestSite
 {
@@ -12,7 +10,12 @@ namespace Glimpse.Nancy.TestSite
         {
             Get["/"] = _ =>
             {
-                return View["Index"];
+                return Negotiate
+                    .WithModel(new { Foo = "Bar", Now = DateTime.Now })
+                    .WithAllowedMediaRange("text/json")
+                    .WithAllowedMediaRange("text/html")
+                    .WithAllowedMediaRange("text/xml")
+                    .WithView("Index");
             };
         }
     }

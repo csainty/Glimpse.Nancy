@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="GlimpseStartup.cs" />
     <Compile Include="DictionaryDataStore.cs" />
+    <Compile Include="Models\ContentNegotiationModel.cs" />
     <Compile Include="Models\RequestModel.cs" />
     <Compile Include="NancyEndpointConfiguration.cs" />
     <Compile Include="NancyFrameworkProvider.cs" />
@@ -55,6 +56,7 @@
     <Compile Include="PreBodyTagFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TabContextExtensions.cs" />
+    <Compile Include="Tabs\ContentNegotiation.cs" />
     <Compile Include="Tabs\NancyTab.cs" />
     <Compile Include="Tabs\Request.cs" />
   </ItemGroup>
