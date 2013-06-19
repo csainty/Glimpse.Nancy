@@ -28,7 +28,7 @@ namespace Glimpse.Nancy
 
             if (type == typeof(ResourceEndpointConfiguration))
             {
-                return new NancyEndpointConfiguration() as T;
+                return new NancyEndpointConfiguration(this.context) as T;
             }
 
             return null;

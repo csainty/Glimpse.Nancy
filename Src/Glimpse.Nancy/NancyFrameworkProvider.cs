@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using Glimpse.Core.Extensibility;
 using Glimpse.Core.Framework;
 using Nancy;
+using Nancy.Extensions;
 
 namespace Glimpse.Nancy
 {
@@ -36,7 +38,7 @@ namespace Glimpse.Nancy
 
         public IRequestMetadata RequestMetadata
         {
-            get { throw new NotImplementedException(); }
+            get { return new NancyRequestMetadata(this.context); }
         }
 
         public object RuntimeContext
@@ -46,27 +48,28 @@ namespace Glimpse.Nancy
 
         public void SetCookie(string name, string value)
         {
-            throw new NotImplementedException();
+            this.context.Response.AddCookie(name, value);
         }
 
         public void SetHttpResponseHeader(string name, string value)
         {
-            throw new NotImplementedException();
+            this.context.Response.Headers[name] = value;
         }
 
         public void SetHttpResponseStatusCode(int statusCode)
         {
-            throw new NotImplementedException();
+            this.context.Response.StatusCode = (HttpStatusCode)statusCode;
         }
 
         public void WriteHttpResponse(string content)
         {
-            throw new NotImplementedException();
+            var bytes = Encoding.UTF8.GetBytes(content);
+            this.WriteHttpResponse(bytes);
         }
 
         public void WriteHttpResponse(byte[] content)
         {
-            throw new NotImplementedException();
+            this.context.Response.Contents = s => { s.Write(content, 0, content.Length); };
         }
     }
 }

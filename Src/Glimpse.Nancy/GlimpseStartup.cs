@@ -23,16 +23,17 @@ namespace Glimpse.Nancy
 
             pipelines.BeforeRequest.AddItemToStartOfPipeline(ctx =>
             {
+                if (ctx.Request.Path.ToLower() != "/glimpse.axd") return null;
+
                 var runtime = GetRuntime(ctx);
+                if (runtime == null) return HttpStatusCode.NotFound;
+
                 if (runtime.IsInitialized || runtime.Initialize())
                 {
-
-                    if (ctx.Request.Path.ToLower() != "/glimpse.axd") return null;
-                    if (runtime == null) return HttpStatusCode.NotFound;
-
                     var queryString = (DynamicDictionary)ctx.Request.Query;
                     string resourceName = queryString["n"];
 
+                    ctx.Response = new Response();
                     if (string.IsNullOrEmpty(resourceName))
                     {
                         runtime.ExecuteDefaultResource();
@@ -41,9 +42,8 @@ namespace Glimpse.Nancy
                     {
                         runtime.ExecuteResource(resourceName, new ResourceParameters(BuildQueryStringDictionary(queryString)));
                     }
-                    return "Well what do we do now?";
                 }
-                return "Why no init?";
+                return null;
             });
 
             pipelines.AfterRequest.AddItemToEndOfPipeline(ctx =>

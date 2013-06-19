@@ -1,20 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Glimpse.Core.Extensibility;
 using Glimpse.Core.Framework;
 using Nancy;
-using Nancy.ViewEngines;
+using Nancy.Extensions;
 
 namespace Glimpse.Nancy
 {
     public class NancyEndpointConfiguration : ResourceEndpointConfiguration
     {
+        private readonly NancyContext context;
+
+        public NancyEndpointConfiguration(NancyContext context)
+        {
+            this.context = context;
+        }
+
         protected override string GenerateUriTemplate(string resourceName, string baseUri, IEnumerable<ResourceParameterMetadata> parameters, ILogger logger)
         {
-            var root = baseUri;  //VirtualPathUtility.ToAbsolute(baseUri, ApplicationPath);
+            var root = context.ToFullPath(baseUri);
 
             var stringBuilder = new StringBuilder(string.Format(@"{0}?n={1}", root, resourceName));
 
