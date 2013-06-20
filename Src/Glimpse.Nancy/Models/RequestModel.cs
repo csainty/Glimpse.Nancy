@@ -1,103 +1,76 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Nancy;
 using Nancy.Cookies;
 using Nancy.Extensions;
-using Nancy.Helpers;
+using Nancy.Routing;
 
 namespace Glimpse.Nancy.Models
 {
     public class RequestModel
     {
-        public RequestModel(NancyContext context, IRootPathProvider rootPathProvider)
+        private readonly NancyContext context;
+        private readonly IRootPathProvider rootPathProvider;
+        private readonly ResolveResult routeResolution;
+
+        public RequestModel(NancyContext context, IRootPathProvider rootPathProvider, IRouteResolver routeResolver)
         {
-            var request = context.Request;
+            this.context = context;
+            this.rootPathProvider = rootPathProvider;
+            this.routeResolution = routeResolver.Resolve(context);
 
-            CurrentUiCulture = context.Culture;
-            ApplicationPath = context.ToFullPath("~/");
-            Path = request.Path;
-            PhysicalApplicationPath = rootPathProvider.GetRootPath();
-            Url = request.Url;
-            UrlReferrer = String.IsNullOrEmpty(request.Headers.Referrer) ? null : new Uri(request.Headers.Referrer);
-            UserAgent = request.Headers.UserAgent;
-            UserHostAddress = request.UserHostAddress;
-            UserHostName = request.Headers.Host;
-
-            Cookies = GetCookies(request.Headers.Cookie);
-            QueryString = GetQueryString(request.Query);
+            Cookies = this.context.Request.Headers.Cookie.Select(x => new CookieModel(x)).ToArray();
+            QueryString = ((DynamicDictionary)this.context.Request.Query).Serialize();
+            Parameters = this.routeResolution.Parameters.Serialize();
         }
 
         //// TODO: Add Form
         //// TODO: Add InputStream
 
-        public CultureInfo CurrentUiCulture { get; private set; }
+        public CultureInfo CurrentUiCulture { get { return this.context.Culture; } }
 
-        public string ApplicationPath { get; private set; }
+        public string ApplicationPath { get { return this.context.ToFullPath("~/"); } }
 
-        public string Path { get; private set; }
+        public string RequestPath { get { return this.context.Request.Path; } }
 
-        public string PhysicalApplicationPath { get; private set; }
+        public string PhysicalApplicationPath { get { return this.rootPathProvider.GetRootPath(); } }
 
-        public Uri Url { get; private set; }
+        public Uri Url { get { return this.context.Request.Url; } }
 
-        public Uri UrlReferrer { get; private set; }
+        public Uri UrlReferrer { get { return String.IsNullOrEmpty(this.context.Request.Headers.Referrer) ? null : new Uri(this.context.Request.Headers.Referrer); } }
 
-        public string UserAgent { get; private set; }
+        public string UserAgent { get { return context.Request.Headers.UserAgent; } }
 
-        public string UserHostAddress { get; private set; }
+        public string UserHostAddress { get { return context.Request.UserHostAddress; } }
 
-        public string UserHostName { get; private set; }
+        public string UserHostName { get { return context.Request.Headers.Host; } }
 
-        public IEnumerable<Cookie> Cookies { get; private set; }
+        public IEnumerable<CookieModel> Cookies { get; private set; }
 
-        public IEnumerable<QueryStringParameter> QueryString { get; private set; }
+        public IEnumerable<KeyValuePair<string, string>> QueryString { get; private set; }
 
-        private IEnumerable<Cookie> GetCookies(IEnumerable<INancyCookie> cookies)
+        public IEnumerable<KeyValuePair<string, string>> Parameters { get; private set; }
+
+        public class CookieModel
         {
-            var result = new List<Cookie>();
+            private readonly INancyCookie cookie;
 
-            foreach (var cookie in cookies)
+            public CookieModel(INancyCookie cookie)
             {
-                result.Add(new Cookie
-                {
-                    Name = cookie.Name,
-                    Path = cookie.Path,
-                    IsSecure = cookie.Secure,
-                    Value = HttpUtility.UrlDecode(cookie.Value),
-                    HttpOnly = cookie.HttpOnly
-                });
+                this.cookie = cookie;
             }
 
-            return result;
-        }
+            public string Name { get { return this.cookie.Name; } }
 
-        private IEnumerable<QueryStringParameter> GetQueryString(DynamicDictionary queryString)
-        {
-            foreach (var key in queryString)
-            {
-                yield return new QueryStringParameter { Key = key, Value = queryString[key] };
-            }
-        }
+            public string Path { get { return this.cookie.Path; } }
 
-        public class QueryStringParameter
-        {
-            public string Key { get; set; }
+            public bool IsSecure { get { return this.cookie.Secure; } }
 
-            public string Value { get; set; }
-        }
+            public string Value { get { return this.cookie.Value; } }
 
-        public class Cookie
-        {
-            public string Name { get; set; }
-
-            public string Path { get; set; }
-
-            public bool IsSecure { get; set; }
-
-            public string Value { get; set; }
-
-            public bool HttpOnly { get; set; }
+            public bool HttpOnly { get { return this.cookie.HttpOnly; } }
         }
     }
 }

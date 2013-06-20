@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\DynamicDictionaryExtensions.cs" />
     <Compile Include="GlimpseRegistrations.cs" />
     <Compile Include="GlimpseStartup.cs" />
     <Compile Include="DictionaryDataStore.cs" />

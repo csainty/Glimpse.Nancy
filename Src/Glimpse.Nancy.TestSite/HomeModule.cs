@@ -1,6 +1,5 @@
 ﻿using System;
 using Nancy;
-using Nancy.Responses.Negotiation;
 
 namespace Glimpse.Nancy.TestSite
 {
@@ -16,6 +15,11 @@ namespace Glimpse.Nancy.TestSite
                     .WithAllowedMediaRange("text/html")
                     .WithAllowedMediaRange("text/xml")
                     .WithView("Index");
+            };
+
+            Get["/greet/{name}"] = _ =>
+            {
+                return View["Greet", new { Name = _.name }];
             };
         }
     }

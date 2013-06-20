@@ -3,6 +3,7 @@ using Glimpse.Core.Extensibility;
 using Glimpse.Core.Framework;
 using Nancy;
 using Nancy.Bootstrapper;
+using Nancy.Routing;
 
 namespace Glimpse.Nancy
 {
