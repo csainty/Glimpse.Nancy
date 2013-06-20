@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Glimpse.Core.Extensibility;
 using Glimpse.Core.Framework;
 using Nancy;
@@ -8,31 +6,6 @@ using Nancy.Bootstrapper;
 
 namespace Glimpse.Nancy
 {
-    public class TabBuilder : IApplicationRegistrations
-    {
-        public IEnumerable<CollectionTypeRegistration> CollectionTypeRegistrations
-        {
-            get
-            {
-                AppDomainAssemblyTypeScanner.AddAssembliesToScan(typeof(Glimpse.Core.Tab.Timeline).Assembly);
-                var stuff = AppDomainAssemblyTypeScanner.TypesOf<ITab>();
-                return new [] {
-                    new CollectionTypeRegistration(typeof(ITab), stuff)
-                };
-            }
-        }
-
-        public IEnumerable<InstanceRegistration> InstanceRegistrations
-        {
-            get { return null; }
-        }
-
-        public IEnumerable<TypeRegistration> TypeRegistrations
-        {
-            get { return null; }
-        }
-    }
-
     public class GlimpseStartup : IApplicationStartup
     {
         private const string RuntimeKey = "_glimpse_runtime";
@@ -49,7 +22,7 @@ namespace Glimpse.Nancy
             pipelines.BeforeRequest.AddItemToStartOfPipeline(ctx =>
             {
                 var runtime = GetRuntime(ctx);
-                if (runtime.IsInitialized || runtime.Initialize())
+                if (runtime.IsInitialized)
                 {
                     runtime.BeginRequest();
                 }
@@ -64,7 +37,7 @@ namespace Glimpse.Nancy
                 var runtime = GetRuntime(ctx);
                 if (runtime == null) return HttpStatusCode.NotFound;
 
-                if (runtime.IsInitialized || runtime.Initialize())
+                if (runtime.IsInitialized)
                 {
                     var queryString = (DynamicDictionary)ctx.Request.Query;
                     string resourceName = queryString["n"];
@@ -85,7 +58,7 @@ namespace Glimpse.Nancy
             pipelines.AfterRequest.AddItemToEndOfPipeline(ctx =>
             {
                 var runtime = GetRuntime(ctx);
-                if (runtime.IsInitialized || runtime.Initialize())
+                if (runtime.IsInitialized)
                 {
                     runtime.EndRequest();
                 }
@@ -115,6 +88,7 @@ namespace Glimpse.Nancy
             var factory = new Factory(serviceLocator);
             serviceLocator.Logger = factory.InstantiateLogger();
             var runtime = factory.InstantiateRuntime();
+            runtime.Initialize();
             context.Items[RuntimeKey] = runtime;
             return runtime;
         }

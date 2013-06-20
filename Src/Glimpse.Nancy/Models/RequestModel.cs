@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using Nancy;
 using Nancy.Cookies;
+using Nancy.Extensions;
 using Nancy.Helpers;
 
 namespace Glimpse.Nancy.Models
@@ -14,7 +15,7 @@ namespace Glimpse.Nancy.Models
             var request = context.Request;
 
             CurrentUiCulture = context.Culture;
-            //ApplicationPath = rootPathProvider.GetRootPath();
+            ApplicationPath = context.ToFullPath("~/");
             Path = request.Path;
             PhysicalApplicationPath = rootPathProvider.GetRootPath();
             Url = request.Url;
