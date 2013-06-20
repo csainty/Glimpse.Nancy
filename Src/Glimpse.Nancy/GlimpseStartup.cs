@@ -1,13 +1,48 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Glimpse.Core.Extensibility;
 using Glimpse.Core.Framework;
 using Nancy;
 using Nancy.Bootstrapper;
 
 namespace Glimpse.Nancy
 {
+    public class TabBuilder : IApplicationRegistrations
+    {
+        public IEnumerable<CollectionTypeRegistration> CollectionTypeRegistrations
+        {
+            get
+            {
+                AppDomainAssemblyTypeScanner.AddAssembliesToScan(typeof(Glimpse.Core.Tab.Timeline).Assembly);
+                var stuff = AppDomainAssemblyTypeScanner.TypesOf<ITab>();
+                return new [] {
+                    new CollectionTypeRegistration(typeof(ITab), stuff)
+                };
+            }
+        }
+
+        public IEnumerable<InstanceRegistration> InstanceRegistrations
+        {
+            get { return null; }
+        }
+
+        public IEnumerable<TypeRegistration> TypeRegistrations
+        {
+            get { return null; }
+        }
+    }
+
     public class GlimpseStartup : IApplicationStartup
     {
         private const string RuntimeKey = "_glimpse_runtime";
+
+        private readonly IEnumerable<ITab> tabs;
+
+        public GlimpseStartup(IEnumerable<ITab> tabs)
+        {
+            this.tabs = tabs;
+        }
 
         public void Initialize(IPipelines pipelines)
         {
@@ -67,7 +102,7 @@ namespace Glimpse.Nancy
             return d;
         }
 
-        private static IGlimpseRuntime GetRuntime(NancyContext context)
+        private IGlimpseRuntime GetRuntime(NancyContext context)
         {
             if (context.Items.ContainsKey(RuntimeKey))
             {
@@ -75,6 +110,8 @@ namespace Glimpse.Nancy
             }
 
             var serviceLocator = new NancyServiceLocator(context);
+            serviceLocator.Tabs = this.tabs;
+
             var factory = new Factory(serviceLocator);
             serviceLocator.Logger = factory.InstantiateLogger();
             var runtime = factory.InstantiateRuntime();

@@ -9,14 +9,14 @@ namespace Glimpse.Nancy.Models
 {
     public class RequestModel
     {
-        public RequestModel(NancyContext context)
+        public RequestModel(NancyContext context, IRootPathProvider rootPathProvider)
         {
             var request = context.Request;
 
             CurrentUiCulture = context.Culture;
             //ApplicationPath = rootPathProvider.GetRootPath();
             Path = request.Path;
-            //PhysicalApplicationPath = rootPathProvider.GetRootPath();
+            PhysicalApplicationPath = rootPathProvider.GetRootPath();
             Url = request.Url;
             UrlReferrer = String.IsNullOrEmpty(request.Headers.Referrer) ? null : new Uri(request.Headers.Referrer);
             UserAgent = request.Headers.UserAgent;
