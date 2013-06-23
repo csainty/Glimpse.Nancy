@@ -51,6 +51,7 @@
     <Compile Include="DictionaryDataStore.cs" />
     <Compile Include="Models\ContentNegotiationModel.cs" />
     <Compile Include="Models\RequestModel.cs" />
+    <Compile Include="Models\ViewEnginesModel.cs" />
     <Compile Include="NancyEndpointConfiguration.cs" />
     <Compile Include="NancyFrameworkProvider.cs" />
     <Compile Include="NancyRequestMetadata.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Models\ModulesModel.cs" />
     <Compile Include="Tabs\NancyTab.cs" />
     <Compile Include="Tabs\Request.cs" />
+    <Compile Include="Tabs\ViewEngines.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
