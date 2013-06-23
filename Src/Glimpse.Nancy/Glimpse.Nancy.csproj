@@ -59,6 +59,7 @@
     <Compile Include="Filters\PreBodyTagFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Extensions\TabContextExtensions.cs" />
+    <Compile Include="Replacements\GlimpseViewEngine.cs" />
     <Compile Include="Tabs\ContentNegotiation.cs" />
     <Compile Include="Tabs\Modules.cs" />
     <Compile Include="Models\ModulesModel.cs" />

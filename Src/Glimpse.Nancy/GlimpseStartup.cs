@@ -3,13 +3,13 @@ using Glimpse.Core.Extensibility;
 using Glimpse.Core.Framework;
 using Nancy;
 using Nancy.Bootstrapper;
-using Nancy.Routing;
 
 namespace Glimpse.Nancy
 {
     public class GlimpseStartup : IApplicationStartup
     {
         private const string RuntimeKey = "_glimpse_runtime";
+        private const string FactoryKey = "_glimpse_factory";
 
         private readonly IEnumerable<ITab> tabs;
 
@@ -91,7 +91,21 @@ namespace Glimpse.Nancy
             var runtime = factory.InstantiateRuntime();
             runtime.Initialize();
             context.Items[RuntimeKey] = runtime;
+            context.Items[FactoryKey] = factory;
             return runtime;
+        }
+    }
+
+    public static class NancyContextExtensions
+    {
+        public static IExecutionTimer GetTimer(this NancyContext context)
+        {
+            return (context.Items["_glimpse_factory"] as Factory).InstantiateTimerStrategy()();
+        }
+
+        public static IMessageBroker GetMessageBroker(this NancyContext context)
+        {
+            return (context.Items["_glimpse_factory"] as Factory).InstantiateMessageBroker();
         }
     }
 }
