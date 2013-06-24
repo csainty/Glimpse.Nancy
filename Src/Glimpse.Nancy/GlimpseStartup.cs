@@ -9,10 +9,12 @@ namespace Glimpse.Nancy
     public class GlimpseStartup : IApplicationStartup
     {
         private readonly IEnumerable<ITab> tabs;
+        private readonly IEnumerable<IDisplay> displays;
 
-        public GlimpseStartup(IEnumerable<ITab> tabs)
+        public GlimpseStartup(IEnumerable<ITab> tabs, IEnumerable<IDisplay> displays)
         {
             this.tabs = tabs;
+            this.displays = displays;
         }
 
         public void Initialize(IPipelines pipelines)
@@ -80,6 +82,7 @@ namespace Glimpse.Nancy
 
             var serviceLocator = new NancyServiceLocator(context);
             serviceLocator.Tabs = this.tabs;
+            serviceLocator.Displays = this.displays;
 
             var factory = new Factory(serviceLocator);
             serviceLocator.Logger = factory.InstantiateLogger();

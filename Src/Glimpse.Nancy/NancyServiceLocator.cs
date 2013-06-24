@@ -25,12 +25,18 @@ namespace Glimpse.Nancy
 
         public IEnumerable<ITab> Tabs { get; set; }
 
+        public IEnumerable<IDisplay> Displays { get; set; }
+
         public ICollection<T> GetAllInstances<T>() where T : class
         {
             var type = typeof(T);
             if (type == typeof(ITab))
             {
                 return Tabs.ToArray() as ICollection<T>;
+            }
+            if (type == typeof(IDisplay))
+            {
+                return Displays.ToArray() as ICollection<T>;
             }
             return null;
         }
