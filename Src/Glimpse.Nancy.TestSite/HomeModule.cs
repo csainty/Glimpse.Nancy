@@ -9,6 +9,8 @@ namespace Glimpse.Nancy.TestSite
         {
             Get["/"] = _ =>
             {
+                Context.Trace.TraceLog.WriteLog(sb => sb.AppendLine("User requested home page"));
+
                 return Negotiate
                     .WithModel(new { Foo = "Bar", Now = DateTime.Now })
                     .WithAllowedMediaRange("text/json")

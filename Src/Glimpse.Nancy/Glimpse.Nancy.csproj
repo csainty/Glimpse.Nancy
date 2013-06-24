@@ -46,9 +46,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\DynamicDictionaryExtensions.cs" />
+    <Compile Include="Extensions\NancyContextExtensions.cs" />
     <Compile Include="GlimpseRegistrations.cs" />
     <Compile Include="GlimpseStartup.cs" />
     <Compile Include="DictionaryDataStore.cs" />
+    <Compile Include="Inspectors\TraceLogInspector.cs" />
     <Compile Include="Models\ContentNegotiationModel.cs" />
     <Compile Include="Models\RequestModel.cs" />
     <Compile Include="Models\ViewEnginesModel.cs" />

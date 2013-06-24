@@ -8,9 +8,6 @@ namespace Glimpse.Nancy
 {
     public class GlimpseStartup : IApplicationStartup
     {
-        private const string RuntimeKey = "_glimpse_runtime";
-        private const string FactoryKey = "_glimpse_factory";
-
         private readonly IEnumerable<ITab> tabs;
 
         public GlimpseStartup(IEnumerable<ITab> tabs)
@@ -78,34 +75,19 @@ namespace Glimpse.Nancy
 
         private IGlimpseRuntime GetRuntime(NancyContext context)
         {
-            if (context.Items.ContainsKey(RuntimeKey))
-            {
-                return context.Items[RuntimeKey] as IGlimpseRuntime;
-            }
+            IGlimpseRuntime runtime;
+            if (context.TryGetGlimpseRuntime(out runtime)) return runtime;
 
             var serviceLocator = new NancyServiceLocator(context);
             serviceLocator.Tabs = this.tabs;
 
             var factory = new Factory(serviceLocator);
             serviceLocator.Logger = factory.InstantiateLogger();
-            var runtime = factory.InstantiateRuntime();
+            runtime = factory.InstantiateRuntime();
             runtime.Initialize();
-            context.Items[RuntimeKey] = runtime;
-            context.Items[FactoryKey] = factory;
+            context.SetGlimpseRuntime(runtime);
+            context.SetGlimpseFactory(factory);
             return runtime;
-        }
-    }
-
-    public static class NancyContextExtensions
-    {
-        public static IExecutionTimer GetTimer(this NancyContext context)
-        {
-            return (context.Items["_glimpse_factory"] as Factory).InstantiateTimerStrategy()();
-        }
-
-        public static IMessageBroker GetMessageBroker(this NancyContext context)
-        {
-            return (context.Items["_glimpse_factory"] as Factory).InstantiateMessageBroker();
         }
     }
 }
