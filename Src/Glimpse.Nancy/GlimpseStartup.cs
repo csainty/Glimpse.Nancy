@@ -21,11 +21,9 @@ namespace Glimpse.Nancy
         {
             pipelines.BeforeRequest.AddItemToStartOfPipeline(ctx =>
             {
-                var runtime = GetRuntime(ctx);
-                if (runtime.IsInitialized)
-                {
-                    runtime.BeginRequest();
-                }
+                InitializeGlimpse(ctx);
+
+                GlimpseRuntime.Instance.BeginRequest(GetFrameworkProvider(ctx));
                 return null;
             });
 
@@ -33,36 +31,48 @@ namespace Glimpse.Nancy
             {
                 // TODO: Read this url from the web.config
                 if (ctx.Request.Path.ToLower() != "/glimpse.axd") return null;
+                if (!GlimpseRuntime.IsInitialized) return HttpStatusCode.NotFound;
 
-                var runtime = GetRuntime(ctx);
-                if (runtime == null) return HttpStatusCode.NotFound;
+                var queryString = (DynamicDictionary)ctx.Request.Query;
+                string resourceName = queryString["n"];
 
-                if (runtime.IsInitialized)
+                ctx.Response = new Response();
+                if (string.IsNullOrEmpty(resourceName))
                 {
-                    var queryString = (DynamicDictionary)ctx.Request.Query;
-                    string resourceName = queryString["n"];
-
-                    ctx.Response = new Response();
-                    if (string.IsNullOrEmpty(resourceName))
-                    {
-                        runtime.ExecuteDefaultResource();
-                    }
-                    else
-                    {
-                        runtime.ExecuteResource(resourceName, new ResourceParameters(BuildQueryStringDictionary(queryString)));
-                    }
+                    GlimpseRuntime.Instance.ExecuteDefaultResource(GetFrameworkProvider(ctx));
+                }
+                else
+                {
+                    GlimpseRuntime.Instance.ExecuteResource(GetFrameworkProvider(ctx), resourceName, new ResourceParameters(BuildQueryStringDictionary(queryString)));
                 }
                 return null;
             });
 
             pipelines.AfterRequest.AddItemToEndOfPipeline(ctx =>
             {
-                var runtime = GetRuntime(ctx);
-                if (runtime.IsInitialized)
-                {
-                    runtime.EndRequest();
-                }
+                if (!GlimpseRuntime.IsInitialized) return;
+
+                GlimpseRuntime.Instance.EndRequest(GetFrameworkProvider(ctx));
             });
+        }
+
+        private IFrameworkProvider GetFrameworkProvider(NancyContext ctx)
+        {
+            return new NancyFrameworkProvider(ctx, GlimpseRuntime.Instance.Configuration.Logger);
+        }
+
+        private void InitializeGlimpse(NancyContext ctx)
+        {
+            if (GlimpseRuntime.IsInitialized)
+            {
+                return;
+            }
+
+            var config = new GlimpseConfiguration(
+                new NancyEndpointConfiguration(ctx),
+                new ApplicationPersistenceStore(new DictionaryDataStore(ctx.Items))
+            );
+            GlimpseRuntime.Initialize(config);
         }
 
         private static IDictionary<string, string> BuildQueryStringDictionary(DynamicDictionary queryString)
@@ -73,24 +83,6 @@ namespace Glimpse.Nancy
                 d.Add(key, queryString[key]);
             }
             return d;
-        }
-
-        private IGlimpseRuntime GetRuntime(NancyContext context)
-        {
-            IGlimpseRuntime runtime;
-            if (context.TryGetGlimpseRuntime(out runtime)) return runtime;
-
-            var serviceLocator = new NancyServiceLocator(context);
-            serviceLocator.Tabs = this.tabs;
-            serviceLocator.Displays = this.displays;
-
-            var factory = new Factory(serviceLocator);
-            serviceLocator.Logger = factory.InstantiateLogger();
-            runtime = factory.InstantiateRuntime();
-            runtime.Initialize();
-            context.SetGlimpseRuntime(runtime);
-            context.SetGlimpseFactory(factory);
-            return runtime;
         }
     }
 }

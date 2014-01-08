@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Glimpse.Core.Framework;
 using Glimpse.Core.Message;
 using Nancy;
 using Nancy.ViewEngines;
@@ -31,9 +32,9 @@ namespace Glimpse.Nancy.Replacements
             {
                 if (engine.Extensions.Contains(viewLocationResult.Extension))
                 {
-                    var timer = renderContext.Context.GetTimer();
+                    var timer = GlimpseRuntime.Instance.Configuration.TimerStrategy();
                     var result = timer.Time(() => engine.RenderView(viewLocationResult, model, renderContext));
-                    renderContext.Context.GetMessageBroker().Publish(new Message { Id = Guid.NewGuid() }
+                    GlimpseRuntime.Instance.Configuration.MessageBroker.Publish(new Message { Id = Guid.NewGuid() }
                         .AsTimedMessage(result)
                         .AsTimelineMessage("Render View", new TimelineCategoryItem("Views", "#999", "#bbb"))
                     );
