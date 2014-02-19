@@ -8,7 +8,7 @@ using Nancy;
 
 namespace Glimpse.Nancy
 {
-    public class NancyFrameworkProvider : IFrameworkProvider
+    public class NancyRequestResponseAdapter : IRequestResponseAdapter
     {
         private static IDataStore ServerStore = new DictionaryDataStore(new Dictionary<string, object>());
 
@@ -16,7 +16,7 @@ namespace Glimpse.Nancy
         private readonly IDataStore contextDataStore;
         private readonly ILogger logger;
 
-        public NancyFrameworkProvider(NancyContext ctx, ILogger logger)
+        public NancyRequestResponseAdapter(NancyContext ctx, ILogger logger)
         {
             this.context = ctx;
             this.logger = logger;

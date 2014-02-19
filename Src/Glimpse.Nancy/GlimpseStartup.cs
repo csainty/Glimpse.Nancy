@@ -11,12 +11,10 @@ namespace Glimpse.Nancy
     public class GlimpseStartup : IApplicationStartup
     {
         private readonly IEnumerable<ITab> tabs;
-        private readonly IEnumerable<IDisplay> displays;
 
-        public GlimpseStartup(IEnumerable<ITab> tabs, IEnumerable<IDisplay> displays)
+        public GlimpseStartup(IEnumerable<ITab> tabs)
         {
             this.tabs = tabs;
-            this.displays = displays;
         }
 
         public void Initialize(IPipelines pipelines)
@@ -25,7 +23,7 @@ namespace Glimpse.Nancy
             {
                 InitializeGlimpse(ctx);
 
-                GlimpseRuntime.Instance.BeginRequest(GetFrameworkProvider(ctx));
+                ctx.SetRequestHandle(GlimpseRuntime.Instance.BeginRequest(GetRequestResponseAdapter(ctx)));
                 return null;
             });
 
@@ -41,11 +39,11 @@ namespace Glimpse.Nancy
                 ctx.Response = new Response();
                 if (string.IsNullOrEmpty(resourceName))
                 {
-                    GlimpseRuntime.Instance.ExecuteDefaultResource(GetFrameworkProvider(ctx));
+                    GlimpseRuntime.Instance.ExecuteDefaultResource(ctx.GetRequestHandle());
                 }
                 else
                 {
-                    GlimpseRuntime.Instance.ExecuteResource(GetFrameworkProvider(ctx), resourceName, new ResourceParameters(BuildQueryStringDictionary(queryString)));
+                    GlimpseRuntime.Instance.ExecuteResource(ctx.GetRequestHandle(), resourceName, new ResourceParameters(BuildQueryStringDictionary(queryString)));
                 }
                 return null;
             });
@@ -54,13 +52,13 @@ namespace Glimpse.Nancy
             {
                 if (!GlimpseRuntime.IsInitialized) return;
 
-                GlimpseRuntime.Instance.EndRequest(GetFrameworkProvider(ctx));
+                GlimpseRuntime.Instance.EndRequest(ctx.GetRequestHandle());
             });
         }
 
-        private IFrameworkProvider GetFrameworkProvider(NancyContext ctx)
+        private IRequestResponseAdapter GetRequestResponseAdapter(NancyContext ctx)
         {
-            return new NancyFrameworkProvider(ctx, GlimpseRuntime.Instance.Configuration.Logger);
+            return new NancyRequestResponseAdapter(ctx, GlimpseRuntime.Instance.Configuration.Logger);
         }
 
         private void InitializeGlimpse(NancyContext ctx)
@@ -72,9 +70,8 @@ namespace Glimpse.Nancy
 
             var config = new GlimpseConfiguration(
                 new NancyEndpointConfiguration(ctx),
-                new ApplicationPersistenceStore(new DictionaryDataStore(ctx.Items))
+                new InMemoryPersistenceStore(new DictionaryDataStore(ctx.Items))
             );
-            config.Displays = this.displays.ToList();
             config.Tabs = this.tabs.ToList();
             GlimpseRuntime.Initialize(config);
         }

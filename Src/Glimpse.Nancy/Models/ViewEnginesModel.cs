@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Glimpse.Nancy.Replacements;
 using Nancy;
 using Nancy.ViewEngines;
 
@@ -9,7 +10,9 @@ namespace Glimpse.Nancy.Models
     {
         public ViewEnginesModel(NancyContext ctx, IEnumerable<IViewEngine> viewEngines)
         {
-            this.AddRange(viewEngines.Select(x => new ViewEngineModel(x)));
+            this.AddRange(viewEngines
+                .Where(x => !(x is GlimpseViewEngine))
+                .Select(x => new ViewEngineModel(x)));
         }
     }
 
