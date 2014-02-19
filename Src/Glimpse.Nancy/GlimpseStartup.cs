@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Glimpse.Core.Extensibility;
 using Glimpse.Core.Framework;
 using Nancy;
@@ -73,6 +74,8 @@ namespace Glimpse.Nancy
                 new NancyEndpointConfiguration(ctx),
                 new ApplicationPersistenceStore(new DictionaryDataStore(ctx.Items))
             );
+            config.Displays = this.displays.ToList();
+            config.Tabs = this.tabs.ToList();
             GlimpseRuntime.Initialize(config);
         }
 
