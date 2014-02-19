@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Glimpse.Core.Extensibility;
 using Glimpse.Core.Framework;
 using Nancy;
@@ -30,7 +31,7 @@ namespace Glimpse.Nancy
             pipelines.BeforeRequest.AddItemToEndOfPipeline(ctx =>
             {
                 // TODO: Read this url from the web.config
-                if (ctx.Request.Path.ToLower() != "/glimpse.axd") return null;
+                if (!String.Equals(ctx.Request.Path, "/glimpse.axd", StringComparison.InvariantCultureIgnoreCase)) return null;
                 if (!GlimpseRuntime.IsInitialized) return HttpStatusCode.NotFound;
 
                 var queryString = (DynamicDictionary)ctx.Request.Query;

@@ -67,6 +67,7 @@ namespace Glimpse.Nancy
 
         public void SetHttpResponseHeader(string name, string value)
         {
+            if (name == "Content-Type") this.context.Response.ContentType = value;
             this.context.Response.Headers[name] = value;
         }
 
