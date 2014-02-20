@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Glimpse.Core.Extensibility;
@@ -12,6 +13,8 @@ namespace Glimpse.Nancy
     public class GlimpseStartup : IApplicationStartup
     {
         private readonly IEnumerable<ITab> tabs;
+        private static readonly object InitLock = new object();
+        private static readonly ConcurrentDictionary<string, object> ServerItemsCollection = new ConcurrentDictionary<string, object>();
 
         public GlimpseStartup(IEnumerable<ITab> tabs)
         {
@@ -33,14 +36,12 @@ namespace Glimpse.Nancy
             pipelines.BeforeRequest.AddItemToEndOfPipeline(ctx =>
             {
                 if (!GlimpseRuntime.IsInitialized) return null;
-                var glimpseUrl = ctx.ToFullPath(GlimpseRuntime.Instance.Configuration.EndpointBaseUri);
-                if (!String.Equals(ctx.Request.Path, glimpseUrl, StringComparison.InvariantCultureIgnoreCase)) return null;
 
                 var handle = ctx.GetRequestHandle();
-                if (handle.RequestHandlingMode == RequestHandlingMode.Unhandled) return null;
-
+                if (handle.RequestHandlingMode != RequestHandlingMode.ResourceRequest) return null;
+                
                 var queryString = (DynamicDictionary)ctx.Request.Query;
-                string resourceName = queryString["n"];
+                var resourceName = (string)queryString["n"];
 
                 ctx.Response = new Response();
                 if (string.IsNullOrEmpty(resourceName))
@@ -51,7 +52,7 @@ namespace Glimpse.Nancy
                 {
                     GlimpseRuntime.Instance.ExecuteResource(handle, resourceName, new ResourceParameters(queryString.ToDictionary()));
                 }
-                return null;
+                return ctx.Response;
             });
 
             pipelines.AfterRequest.AddItemToEndOfPipeline(ctx =>
@@ -69,17 +70,19 @@ namespace Glimpse.Nancy
 
         private void InitializeGlimpse(NancyContext ctx)
         {
-            if (GlimpseRuntime.IsInitialized)
-            {
-                return;
-            }
+            if (GlimpseRuntime.IsInitialized) return;
 
-            var config = new GlimpseConfiguration(
-                new NancyEndpointConfiguration(ctx),
-                new InMemoryPersistenceStore(new DictionaryDataStore(ctx.Items))
-            );
-            config.Tabs = this.tabs.ToList();
-            GlimpseRuntime.Initialize(config);
+            lock (InitLock)
+            {
+                if (GlimpseRuntime.IsInitialized) return;
+
+                var config = new GlimpseConfiguration(
+                    new NancyEndpointConfiguration(ctx),
+                    new InMemoryPersistenceStore(new DictionaryDataStoreAdapter(ServerItemsCollection))
+                );
+                config.Tabs = this.tabs.ToList();
+                GlimpseRuntime.Initialize(config);
+            }
         }
     }
 }
