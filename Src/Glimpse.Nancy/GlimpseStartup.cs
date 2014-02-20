@@ -5,6 +5,7 @@ using Glimpse.Core.Extensibility;
 using Glimpse.Core.Framework;
 using Nancy;
 using Nancy.Bootstrapper;
+using Nancy.Extensions;
 
 namespace Glimpse.Nancy
 {
@@ -23,15 +24,20 @@ namespace Glimpse.Nancy
             {
                 InitializeGlimpse(ctx);
 
-                ctx.SetRequestHandle(GlimpseRuntime.Instance.BeginRequest(GetRequestResponseAdapter(ctx)));
+                var requestHandle = GlimpseRuntime.Instance.BeginRequest(GetRequestResponseAdapter(ctx));
+                if (requestHandle.RequestHandlingMode != RequestHandlingMode.Unhandled) ctx.SetRequestHandle(requestHandle);
+
                 return null;
             });
 
             pipelines.BeforeRequest.AddItemToEndOfPipeline(ctx =>
             {
-                // TODO: Read this url from the web.config
-                if (!String.Equals(ctx.Request.Path, "/glimpse.axd", StringComparison.InvariantCultureIgnoreCase)) return null;
-                if (!GlimpseRuntime.IsInitialized) return HttpStatusCode.NotFound;
+                if (!GlimpseRuntime.IsInitialized) return null;
+                var glimpseUrl = ctx.ToFullPath(GlimpseRuntime.Instance.Configuration.EndpointBaseUri);
+                if (!String.Equals(ctx.Request.Path, glimpseUrl, StringComparison.InvariantCultureIgnoreCase)) return null;
+
+                var handle = ctx.GetRequestHandle();
+                if (handle.RequestHandlingMode == RequestHandlingMode.Unhandled) return null;
 
                 var queryString = (DynamicDictionary)ctx.Request.Query;
                 string resourceName = queryString["n"];
@@ -39,11 +45,11 @@ namespace Glimpse.Nancy
                 ctx.Response = new Response();
                 if (string.IsNullOrEmpty(resourceName))
                 {
-                    GlimpseRuntime.Instance.ExecuteDefaultResource(ctx.GetRequestHandle());
+                    GlimpseRuntime.Instance.ExecuteDefaultResource(handle);
                 }
                 else
                 {
-                    GlimpseRuntime.Instance.ExecuteResource(ctx.GetRequestHandle(), resourceName, new ResourceParameters(BuildQueryStringDictionary(queryString)));
+                    GlimpseRuntime.Instance.ExecuteResource(handle, resourceName, new ResourceParameters(queryString.ToDictionary()));
                 }
                 return null;
             });
@@ -74,16 +80,6 @@ namespace Glimpse.Nancy
             );
             config.Tabs = this.tabs.ToList();
             GlimpseRuntime.Initialize(config);
-        }
-
-        private static IDictionary<string, string> BuildQueryStringDictionary(DynamicDictionary queryString)
-        {
-            var d = new Dictionary<string, string>();
-            foreach (var key in queryString)
-            {
-                d.Add(key, queryString[key]);
-            }
-            return d;
         }
     }
 }
