@@ -2,6 +2,7 @@
 using Nancy;
 using Nancy.Authentication.Stateless;
 using Nancy.Bootstrapper;
+using Nancy.Diagnostics;
 using Nancy.Security;
 using Nancy.TinyIoc;
 
@@ -24,6 +25,11 @@ namespace Glimpse.Nancy.TestSite
                 return new User();
             });
             StatelessAuthentication.Enable(pipelines, authConfig);
+        }
+
+        protected override DiagnosticsConfiguration DiagnosticsConfiguration
+        {
+            get { return new DiagnosticsConfiguration { Password = @"password" }; }
         }
 
         private class User : IUserIdentity
