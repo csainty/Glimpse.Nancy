@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Glimpse.Core.Extensibility;
 using Glimpse.Core.Framework;
 using Nancy;
 using Nancy.Bootstrapper;
-using Nancy.Extensions;
 
 namespace Glimpse.Nancy
 {
@@ -38,8 +36,8 @@ namespace Glimpse.Nancy
                 if (!GlimpseRuntime.IsInitialized) return null;
 
                 var handle = ctx.GetRequestHandle();
-                if (handle.RequestHandlingMode != RequestHandlingMode.ResourceRequest) return null;
-                
+                if (handle == null || handle.RequestHandlingMode != RequestHandlingMode.ResourceRequest) return null;
+
                 var queryString = (DynamicDictionary)ctx.Request.Query;
                 var resourceName = (string)queryString["n"];
 
@@ -59,7 +57,10 @@ namespace Glimpse.Nancy
             {
                 if (!GlimpseRuntime.IsInitialized) return;
 
-                GlimpseRuntime.Instance.EndRequest(ctx.GetRequestHandle());
+                var handle = ctx.GetRequestHandle();
+                if (handle == null) return;
+
+                GlimpseRuntime.Instance.EndRequest(handle);
             });
         }
 

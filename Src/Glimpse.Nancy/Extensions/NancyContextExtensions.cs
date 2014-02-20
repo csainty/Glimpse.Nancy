@@ -7,7 +7,12 @@ namespace Glimpse.Nancy
     {
         public static GlimpseRequestContextHandle GetRequestHandle(this NancyContext ctx)
         {
-            return (GlimpseRequestContextHandle)ctx.Items["GlimpseRequestContextHandle"];
+            object handle;
+            if (!ctx.Items.TryGetValue("GlimpseRequestContextHandle", out handle))
+            {
+                return null;
+            }
+            return (GlimpseRequestContextHandle)handle;
         }
 
         public static void SetRequestHandle(this NancyContext ctx, GlimpseRequestContextHandle handle)
