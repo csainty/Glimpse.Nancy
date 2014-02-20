@@ -52,6 +52,7 @@
     <Compile Include="GlimpseStartup.cs" />
     <Compile Include="DictionaryDataStore.cs" />
     <Compile Include="Inspectors\TraceLogInspector.cs" />
+    <Compile Include="Models\AuthenticationModel.cs" />
     <Compile Include="Models\ContentNegotiationModel.cs" />
     <Compile Include="Models\RequestModel.cs" />
     <Compile Include="Models\ViewEnginesModel.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Extensions\TabContextExtensions.cs" />
     <Compile Include="Replacements\GlimpseViewEngine.cs" />
+    <Compile Include="Tabs\Authentication.cs" />
     <Compile Include="Tabs\ContentNegotiation.cs" />
     <Compile Include="Tabs\Modules.cs" />
     <Compile Include="Models\ModulesModel.cs" />

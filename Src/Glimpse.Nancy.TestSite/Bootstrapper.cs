@@ -1,5 +1,8 @@
-﻿using Nancy;
+﻿using System.Collections.Generic;
+using Nancy;
+using Nancy.Authentication.Stateless;
 using Nancy.Bootstrapper;
+using Nancy.Security;
 using Nancy.TinyIoc;
 
 namespace Glimpse.Nancy.TestSite
@@ -11,6 +14,29 @@ namespace Glimpse.Nancy.TestSite
             base.ApplicationStartup(container, pipelines);
 
             StaticConfiguration.EnableRequestTracing = true;
+
+            var authConfig = new StatelessAuthenticationConfiguration(ctx =>
+            {
+                if (!ctx.Request.Query.auth.HasValue)
+                {
+                    return null;
+                }
+                return new User();
+            });
+            StatelessAuthentication.Enable(pipelines, authConfig);
+        }
+
+        private class User : IUserIdentity
+        {
+            public IEnumerable<string> Claims
+            {
+                get { return new[] { "Awesome", "Ninja" }; }
+            }
+
+            public string UserName
+            {
+                get { return "Foo"; }
+            }
         }
     }
 }
