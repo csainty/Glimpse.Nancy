@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -30,11 +31,41 @@ namespace Glimpse.Nancy.Models
 
         public string RootPath { get { return this.rootPathProvider.GetRootPath(); } }
 
-        public bool TracesDisabled { get { return StaticConfiguration.DisableErrorTraces; } }
+        public bool TracesEnabled { get { return !StaticConfiguration.DisableErrorTraces; } }
 
         public bool CaseSensitivity { get { return StaticConfiguration.CaseSensitive; } }
 
         public string LocatedBootstrapper { get { return NancyBootstrapperLocator.Bootstrapper.GetType().ToString(); } }
+
+        public string BootstrapperContainer
+        {
+            get
+            {
+                var name = AppDomain.CurrentDomain
+                    .GetAssemblies()
+                    .Select(asm => asm.GetName())
+                    .FirstOrDefault(asmName => asmName.Name != null && asmName.Name.StartsWith("Nancy.Bootstrappers."));
+
+                return (name == null) ?
+                    "TinyIoC" :
+                    string.Format("{0} (v{1})", name.Name.Split('.').Last(), name.Version);
+            }
+        }
+
+        public string Hosting
+        {
+            get
+            {
+                var name = AppDomain.CurrentDomain
+                    .GetAssemblies()
+                    .Select(asm => asm.GetName())
+                    .FirstOrDefault(asmName => asmName.Name != null && asmName.Name.StartsWith("Nancy.Hosting."));
+
+                return (name == null) ?
+                    "Unknown" :
+                    string.Format("{0} (v{1})", name.Name.Split('.').Last(), name.Version);
+            }
+        }
 
         public Dictionary<string, IEnumerable<string>> Configuration { get; set; }
     }
