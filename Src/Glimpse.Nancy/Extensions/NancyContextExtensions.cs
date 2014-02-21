@@ -1,4 +1,5 @@
-﻿using Glimpse.Core.Framework;
+﻿using Glimpse.Core.Extensibility;
+using Glimpse.Core.Framework;
 using Nancy;
 
 namespace Glimpse.Nancy
@@ -18,6 +19,16 @@ namespace Glimpse.Nancy
         public static void SetRequestHandle(this NancyContext ctx, GlimpseRequestContextHandle handle)
         {
             ctx.Items["GlimpseRequestContextHandle"] = handle;
+        }
+
+        public static IGlimpseRequestContext TryGetRequestContext(this NancyContext ctx)
+        {
+            IGlimpseRequestContext request;
+
+            var handle = ctx.GetRequestHandle();
+            if (handle == null || handle.RequestHandlingMode == RequestHandlingMode.Unhandled) return null;
+            if (!GlimpseRuntime.Instance.TryGetRequestContext(handle.GlimpseRequestId, out request)) return null;
+            return request;
         }
     }
 }
