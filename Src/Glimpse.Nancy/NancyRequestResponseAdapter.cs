@@ -62,7 +62,7 @@ namespace Glimpse.Nancy
 
         public void SetCookie(string name, string value)
         {
-            this.context.Response.AddCookie(name, value);
+            this.context.Response.WithCookie(name, value);
         }
 
         public void SetHttpResponseHeader(string name, string value)
