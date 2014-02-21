@@ -54,6 +54,7 @@
     <Compile Include="Inspectors\TraceLogInspector.cs" />
     <Compile Include="Models\AuthenticationModel.cs" />
     <Compile Include="Models\ContentNegotiationModel.cs" />
+    <Compile Include="Models\InfoModel.cs" />
     <Compile Include="Models\RequestModel.cs" />
     <Compile Include="Models\ViewEnginesModel.cs" />
     <Compile Include="NancyEndpointConfiguration.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="Replacements\GlimpseViewEngine.cs" />
     <Compile Include="Tabs\Authentication.cs" />
     <Compile Include="Tabs\ContentNegotiation.cs" />
+    <Compile Include="Tabs\Info.cs" />
     <Compile Include="Tabs\Modules.cs" />
     <Compile Include="Models\ModulesModel.cs" />
     <Compile Include="Tabs\NancyTab.cs" />
