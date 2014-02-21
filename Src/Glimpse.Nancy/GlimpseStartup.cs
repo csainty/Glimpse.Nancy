@@ -11,12 +11,14 @@ namespace Glimpse.Nancy
     public class GlimpseStartup : IApplicationStartup
     {
         private readonly IEnumerable<ITab> tabs;
+        private readonly IEnumerable<IInspector> inspectors;
         private static readonly object InitLock = new object();
         private static readonly ConcurrentDictionary<string, object> ServerItemsCollection = new ConcurrentDictionary<string, object>();
 
-        public GlimpseStartup(IEnumerable<ITab> tabs)
+        public GlimpseStartup(IEnumerable<ITab> tabs, IEnumerable<IInspector> inspectors)
         {
             this.tabs = tabs;
+            this.inspectors = inspectors;
         }
 
         public void Initialize(IPipelines pipelines)
@@ -82,6 +84,7 @@ namespace Glimpse.Nancy
                     new InMemoryPersistenceStore(new DictionaryDataStoreAdapter(ServerItemsCollection))
                 );
                 config.Tabs = this.tabs.ToList();
+                config.Inspectors = this.inspectors.ToList();
                 GlimpseRuntime.Initialize(config);
             }
         }
