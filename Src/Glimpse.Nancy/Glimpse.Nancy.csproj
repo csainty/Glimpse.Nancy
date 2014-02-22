@@ -58,7 +58,7 @@
     <Compile Include="Models\ContentNegotiationModel.cs" />
     <Compile Include="Models\InfoModel.cs" />
     <Compile Include="Models\RequestModel.cs" />
-    <Compile Include="Models\ViewEnginesModel.cs" />
+    <Compile Include="Models\ViewsModel.cs" />
     <Compile Include="NancyEndpointConfiguration.cs" />
     <Compile Include="NancyRequestResponseAdapter.cs" />
     <Compile Include="NancyRequestMetadata.cs" />

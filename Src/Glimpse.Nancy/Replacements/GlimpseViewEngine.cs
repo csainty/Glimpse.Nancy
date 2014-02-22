@@ -32,12 +32,13 @@ namespace Glimpse.Nancy.Replacements
             {
                 if (engine.Extensions.Contains(viewLocationResult.Extension))
                 {
-                    if (!GlimpseRuntime.IsInitialized)
+                    var requestContext = renderContext.Context.TryGetRequestContext();
+                    if (!GlimpseRuntime.IsInitialized || requestContext == null)
                     {
                         return engine.RenderView(viewLocationResult, model, renderContext);
                     }
 
-                    var timer = GlimpseRuntime.Instance.CurrentRequestContext.CurrentExecutionTimer;
+                    var timer = requestContext.CurrentExecutionTimer;
                     var result = timer.Time(() => engine.RenderView(viewLocationResult, model, renderContext));
                     GlimpseRuntime.Instance.Configuration.MessageBroker.Publish(new Message { Id = Guid.NewGuid() }
                         .AsTimedMessage(result)
