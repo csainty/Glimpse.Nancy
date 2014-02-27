@@ -47,6 +47,12 @@
     <Reference Include="Castle.Core">
       <HintPath>..\..\Bin\Castle.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Dapper">
+      <HintPath>..\packages\Dapper.1.13\lib\net45\Dapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Glimpse.Ado">
+      <HintPath>..\..\Bin\Glimpse.Ado.dll</HintPath>
+    </Reference>
     <Reference Include="Glimpse.Core">
       <HintPath>..\..\Bin\Glimpse.Core.dll</HintPath>
     </Reference>
@@ -71,6 +77,9 @@
     </Reference>
     <Reference Include="NLog">
       <HintPath>..\..\Bin\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\..\Bin\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
