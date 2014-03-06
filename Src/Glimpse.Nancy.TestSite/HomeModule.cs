@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Data.SQLite;
-using Nancy;
 using Dapper;
-using System.Data.Common;
+using Nancy;
 
 namespace Glimpse.Nancy.TestSite
 {
@@ -13,7 +11,6 @@ namespace Glimpse.Nancy.TestSite
             Get["/"] = _ =>
             {
                 Context.Trace.TraceLog.WriteLog(sb => sb.AppendLine("User requested home page"));
-
 
                 using (var conn = connectionManager.GetConnection())
                 {
@@ -31,6 +28,18 @@ namespace Glimpse.Nancy.TestSite
             Get["/greet/{name}"] = _ =>
             {
                 return View["Greet", new { Name = _.name }];
+            };
+
+            Get["/hits"] = _ =>
+            {
+                using (var conn = connectionManager.GetConnection())
+                {
+                    var hits = conn.Query<string>("SELECT IpAddress FROM HitLog");
+
+                    return Negotiate
+                        .WithModel(hits)
+                        .WithAllowedMediaRange("text/json");
+                }
             };
         }
     }
