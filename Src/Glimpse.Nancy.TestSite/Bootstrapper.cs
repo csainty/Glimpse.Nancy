@@ -30,7 +30,7 @@ namespace Glimpse.Nancy.TestSite
             var connectionFactory = container.Resolve<IConnectionManager>();
             using (var conn = connectionFactory.GetConnection())
             {
-                conn.Execute("CREATE TABLE HitLog (Id INTEGER PRIMARY KEY, IpAddress STRING)");
+                conn.Execute("CREATE TABLE IF NOT EXISTS HitLog (Id INTEGER PRIMARY KEY, IpAddress STRING)");
             }
         }
 
