@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Glimpse.Nancy.Replacements;
 using Nancy;
 using Nancy.ViewEngines;
 
@@ -10,10 +9,7 @@ namespace Glimpse.Nancy.Models
     {
         public ViewsModel(NancyContext ctx, IEnumerable<IViewEngine> viewEngines, IEnumerable<ViewLocationResult> discoveredViews)
         {
-            this.Engines = viewEngines
-                .Where(x => !(x is GlimpseViewEngine))
-                .Select(x => new ViewEngineModel(x));
-
+            this.Engines = viewEngines.Select(x => new ViewEngineModel(x));
             this.Views = discoveredViews.Select(x => new ViewLocationModel(x));
         }
 
@@ -45,10 +41,10 @@ namespace Glimpse.Nancy.Models
             this.result = result;
         }
 
+        public string Location { get { return this.result.Location; } }
+
         public string Name { get { return this.result.Name; } }
 
         public string Extension { get { return this.result.Extension; } }
-
-        public string Location { get { return this.result.Location; } }
     }
 }
