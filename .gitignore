@@ -7,3 +7,5 @@ Src/Glimpse.Nancy.TestSite/Glimpse.log
 Src/Glimpse.Nancy.TestSite/x64/SQLite.Interop.dll
 Src/Glimpse.Nancy.TestSite/x86/SQLite.Interop.dll
 Src/Glimpse.Nancy.TestSite/data.db
+node_modules/
+Build/dist/
