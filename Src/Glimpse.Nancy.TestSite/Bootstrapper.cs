@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Dapper;
 using Nancy;
 using Nancy.Authentication.Stateless;
 using Nancy.Bootstrapper;
@@ -25,6 +26,12 @@ namespace Glimpse.Nancy.TestSite
                 return new User();
             });
             StatelessAuthentication.Enable(pipelines, authConfig);
+
+            var connectionFactory = container.Resolve<IConnectionManager>();
+            using (var conn = connectionFactory.GetConnection())
+            {
+                conn.Execute("CREATE TABLE HitLog (Id INTEGER PRIMARY KEY, IpAddress STRING)");
+            }
         }
 
         protected override DiagnosticsConfiguration DiagnosticsConfiguration

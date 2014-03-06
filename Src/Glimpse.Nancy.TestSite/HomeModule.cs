@@ -8,20 +8,16 @@ namespace Glimpse.Nancy.TestSite
 {
     public class HomeModule : NancyModule
     {
-        public HomeModule()
+        public HomeModule(IConnectionManager connectionManager)
         {
             Get["/"] = _ =>
             {
                 Context.Trace.TraceLog.WriteLog(sb => sb.AppendLine("User requested home page"));
 
-                var factory = DbProviderFactories.GetFactory("System.Data.SQLite");
 
-                using (var conn = factory.CreateConnection())
+                using (var conn = connectionManager.GetConnection())
                 {
-                    conn.ConnectionString = "Data Source=:memory:";
-                    conn.Open();
-                    conn.Execute("CREATE TABLE Foo (Id INTEGER PRIMARY KEY)");
-                    conn.Query("SELECT * FROM Foo");
+                    conn.Execute("INSERT INTO HitLog (IpAddress) VALUES (@ip)", new { ip = "127.0.0.1" });
                 }
 
                 return Negotiate
