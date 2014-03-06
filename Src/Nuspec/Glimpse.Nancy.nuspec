@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Glimpse.Nancy</id>
+    <version>1.0.0-rc</version>
+    <title>Glimpse.Nancy</title>
+    <authors>csainty</authors>
+    <owners>csainty</owners>
+    <projectUrl>https://github.com/csainty/Glimpse.Nancy</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Add Glimpse diagnostics to your Nancy projects.</description>
+    <copyright>Copyright 2014</copyright>
+    <tags>Glimpse Nancy</tags>
+    <dependencies>
+      <dependency id="Nancy" version="0.22.2" />
+      <dependency id="Glimpse" version="2.0.0" />
+    </dependencies>
+  </metadata>
+</package>
