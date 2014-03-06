@@ -1,0 +1,18 @@
+﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Glimpse.Nancy Test Site</title>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/pure/0.4.2/pure-min.css">
+</head>
+<body>
+    <div>
+        <nav>
+            <h1><a href="/">Glimpse.Nancy</a></h1>
+        </nav>
+        @RenderSection("Content", true)
+    </div>
+    <script src="//cdn.jsdelivr.net/jquery/2.1.0/jquery.min.js"></script>
+</body>
+</html>
