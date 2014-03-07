@@ -79,7 +79,7 @@ namespace Glimpse.Nancy
             {
                 if (GlimpseRuntime.IsInitialized) return;
 
-                var config = new GlimpseConfiguration(
+                var config = new Configuration(
                     new NancyEndpointConfiguration(ctx),
                     new InMemoryPersistenceStore(new DictionaryDataStoreAdapter(ServerItemsCollection))
                 );
