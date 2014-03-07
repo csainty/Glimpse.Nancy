@@ -1,6 +1,7 @@
 {
   "name": "Glimpse.Nancy.Build",
   "version": "1.0.0-rc",
+  "assemblyVersion": "1.0.0",
   "description": "Build scripts for Glimpse.Nancy",
   "repository": {
     "type": "git",
@@ -12,7 +13,8 @@
     "grunt-nuget": "~0.1.1",
     "grunt-msbuild": "~0.1.11",
     "grunt-contrib-copy": "~0.5.0",
-    "grunt-contrib-clean": "~0.5.0"
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-dotnet-assembly-info": "~1.0.9"
   },
   "author": "Chris Sainty",
   "license": "MIT"

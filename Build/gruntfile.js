@@ -3,6 +3,17 @@ module.exports = function (grunt) {
 
     grunt.initConfig({
         pkg: pkg,
+        assemblyinfo: {
+            options: {
+                files: ['../Src/Glimpse.Nancy.sln'],
+
+                // Standard assembly info
+                info: {
+                    version: pkg.assemblyVersion, 
+                    fileVersion: pkg.assemblyVersion
+                }
+            }
+        },        
         msbuild: {
             dist: {
                 src: ['../src/Glimpse.Nancy/Glimpse.Nancy.csproj'],
@@ -31,8 +42,8 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     cwd: '../src/Glimpse.Nancy/bin/Release/',
-                    src: ['*'],
-                    dest: 'dist/lib'
+                    src: ['Glimpse.Nancy.dll'],
+                    dest: 'dist/lib/net45'
                 }]
             }
         },
@@ -50,6 +61,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-msbuild');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-dotnet-assembly-info');
  
-    grunt.registerTask("default", ["clean", "msbuild:dist", "copy:nuspec", "copy:lib", "nugetpack:dist"]);
+    grunt.registerTask("default", ["clean", "assemblyinfo", "msbuild:dist", "copy:nuspec", "copy:lib", "nugetpack:dist"]);
 };
