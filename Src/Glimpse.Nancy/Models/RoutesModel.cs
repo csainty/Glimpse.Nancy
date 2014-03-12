@@ -6,9 +6,9 @@ using Nancy.Routing;
 
 namespace Glimpse.Nancy.Models
 {
-    public class ModulesModel : List<RouteModel>
+    public class RoutesModel : List<RouteModel>
     {
-        public ModulesModel(NancyContext ctx, INancyModuleCatalog catalog)
+        public RoutesModel(NancyContext ctx, INancyModuleCatalog catalog)
         {
             var routes = from module in catalog.GetAllModules(ctx)
                          from route in module.Routes

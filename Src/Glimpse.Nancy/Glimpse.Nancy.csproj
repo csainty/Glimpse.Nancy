@@ -68,8 +68,8 @@
     <Compile Include="Tabs\Authentication.cs" />
     <Compile Include="Tabs\ContentNegotiation.cs" />
     <Compile Include="Tabs\Info.cs" />
-    <Compile Include="Tabs\Modules.cs" />
-    <Compile Include="Models\ModulesModel.cs" />
+    <Compile Include="Tabs\Routes.cs" />
+    <Compile Include="Models\RoutesModel.cs" />
     <Compile Include="Tabs\NancyTab.cs" />
     <Compile Include="Tabs\Request.cs" />
     <Compile Include="Tabs\ViewEngines.cs" />
