@@ -1,52 +1,39 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nancy;
 using Nancy.Routing;
 
 namespace Glimpse.Nancy.Models
 {
-    public class ModulesModel : List<ModuleModel>
+    public class ModulesModel : List<RouteModel>
     {
         public ModulesModel(NancyContext ctx, INancyModuleCatalog catalog)
         {
-            this.AddRange(catalog.GetAllModules(ctx).Select(x => new ModuleModel(x)));
+            var routes = from module in catalog.GetAllModules(ctx)
+                         from route in module.Routes
+                         select new RouteModel(module, route);
+            this.AddRange(routes);
         }
-    }
-
-    public class ModuleModel
-    {
-        private readonly INancyModule module;
-
-        public ModuleModel(INancyModule module)
-        {
-            this.module = module;
-            this.Routes = module.Routes.Select(x => new RouteModel(x));
-        }
-
-        public string Name { get { return module.GetType().Name; } }
-
-        public string Path { get { return module.ModulePath; } }
-
-        public IEnumerable<RouteModel> Routes { get; private set; }
     }
 
     public class RouteModel
     {
         private readonly Route route;
+        private readonly INancyModule module;
 
-        public RouteModel(Route route)
+        public RouteModel(INancyModule module, Route route)
         {
             this.route = route;
+            this.module = module;
         }
 
         public string Method { get { return route.Description.Method; } }
 
-        public string Path { get { return route.Description.Path; } }
+        public string Path { get { return String.IsNullOrEmpty(module.ModulePath) ? route.Description.Path : module.ModulePath + "/" + route.Description.Path; } }
+
+        public string RegisteredIn { get { return this.module.GetType().Name; } }
 
         public bool HasCondition { get { return route.Description.Condition != null; } }
-
-        public string Description { get { return route.Description.Description; } }
-
-        public IEnumerable<string> Segments { get { return route.Description.Segments; } }
     }
 }
