@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using Glimpse.Core.Configuration;
 using Glimpse.Core.Extensibility;
 using Glimpse.Core.Framework;
 using Nancy;
@@ -23,6 +24,8 @@ namespace Glimpse.Nancy
 
         public void Initialize(IPipelines pipelines)
         {
+            GlimpseRuntime.Initializer.AddInitializationMessage(LoggingLevel.Info, "Added Glimpse.Nancy to Pipelines");
+
             pipelines.BeforeRequest.AddItemToStartOfPipeline(ctx =>
             {
                 InitializeGlimpse(ctx);
@@ -35,7 +38,7 @@ namespace Glimpse.Nancy
 
             pipelines.BeforeRequest.AddItemToEndOfPipeline(ctx =>
             {
-                if (!GlimpseRuntime.IsInitialized) return null;
+                if (!GlimpseRuntime.IsAvailable) return null;
 
                 var handle = ctx.GetRequestHandle();
                 if (handle == null || handle.RequestHandlingMode != RequestHandlingMode.ResourceRequest) return null;
@@ -44,20 +47,14 @@ namespace Glimpse.Nancy
                 var resourceName = (string)queryString["n"];
 
                 ctx.Response = new Response();
-                if (string.IsNullOrEmpty(resourceName))
-                {
-                    GlimpseRuntime.Instance.ExecuteDefaultResource(handle);
-                }
-                else
-                {
-                    GlimpseRuntime.Instance.ExecuteResource(handle, resourceName, new ResourceParameters(queryString.ToDictionary()));
-                }
+                GlimpseRuntime.Instance.ExecuteResource(handle, resourceName, new ResourceParameters(queryString.ToDictionary()));
+
                 return ctx.Response;
             });
 
             pipelines.AfterRequest.AddItemToEndOfPipeline(ctx =>
             {
-                if (!GlimpseRuntime.IsInitialized) return;
+                if (!GlimpseRuntime.IsAvailable) return;
 
                 var handle = ctx.GetRequestHandle();
                 if (handle == null) return;
@@ -73,11 +70,13 @@ namespace Glimpse.Nancy
 
         private void InitializeGlimpse(NancyContext ctx)
         {
-            if (GlimpseRuntime.IsInitialized) return;
+            if (GlimpseRuntime.IsAvailable) return;
 
             lock (InitLock)
             {
-                if (GlimpseRuntime.IsInitialized) return;
+                if (GlimpseRuntime.IsAvailable) return;
+
+                GlimpseRuntime.Initializer.AddInitializationMessage(LoggingLevel.Info, "Initializing Glimpse.Nancy Runtime");
 
                 var config = new Configuration(
                     new NancyEndpointConfiguration(ctx),
@@ -85,7 +84,8 @@ namespace Glimpse.Nancy
                 );
                 config.Tabs = this.tabs.ToList();
                 config.Inspectors = this.inspectors.ToList();
-                GlimpseRuntime.Initialize(config);
+
+                GlimpseRuntime.Initializer.Initialize(config);
             }
         }
     }

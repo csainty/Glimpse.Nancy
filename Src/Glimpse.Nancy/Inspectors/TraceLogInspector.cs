@@ -11,7 +11,7 @@ namespace Glimpse.Nancy.Inspectors
         {
             pipelines.AfterRequest.AddItemToStartOfPipeline(ctx =>
             {
-                if (!GlimpseRuntime.IsInitialized) return;
+                if (!GlimpseRuntime.IsAvailable) return;
 
                 var traceMessages = ctx.Trace.TraceLog.ToString().Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
                 if (traceMessages.Length > 0)
