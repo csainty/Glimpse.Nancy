@@ -8,26 +8,28 @@ namespace Glimpse.Nancy.Tabs
     public class ViewEngines : NancyTab, IKey
     {
         private readonly IEnumerable<IViewEngine> viewEngines;
+        private readonly IViewLocator viewLocator;
 
-        public ViewEngines(IEnumerable<IViewEngine> viewEngines)
+        public ViewEngines(IEnumerable<IViewEngine> viewEngines, IViewLocator viewLocator)
         {
             this.viewEngines = viewEngines;
+            this.viewLocator = viewLocator;
         }
 
         public override object GetData(ITabContext context)
         {
             var ctx = context.GetNancyContext();
-            return new ViewEnginesModel(ctx, this.viewEngines);
+            return new ViewsModel(ctx, this.viewEngines, this.viewLocator.GetAllCurrentlyDiscoveredViews());
         }
 
         public override string Name
         {
-            get { return "View Engines"; }
+            get { return "Views"; }
         }
 
         public string Key
         {
-            get { return "nancy_glimpse_viewengines"; }
+            get { return "nancy_glimpse_views"; }
         }
     }
 }

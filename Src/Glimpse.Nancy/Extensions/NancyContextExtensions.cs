@@ -4,40 +4,31 @@ using Nancy;
 
 namespace Glimpse.Nancy
 {
-    public static class NancyContextExtensions
+    internal static class NancyContextExtensions
     {
-        private const string RuntimeKey = "_glimpse_runtime";
-        private const string FactoryKey = "_glimpse_factory";
-
-        public static IExecutionTimer GetTimer(this NancyContext context)
+        public static GlimpseRequestContextHandle GetRequestHandle(this NancyContext ctx)
         {
-            return (context.Items[FactoryKey] as Factory).InstantiateTimerStrategy()();
-        }
-
-        public static IMessageBroker GetMessageBroker(this NancyContext context)
-        {
-            return (context.Items[FactoryKey] as Factory).InstantiateMessageBroker();
-        }
-
-        public static bool TryGetGlimpseRuntime(this NancyContext context, out IGlimpseRuntime runtime)
-        {
-            if (context.Items.ContainsKey(RuntimeKey))
+            object handle;
+            if (!ctx.Items.TryGetValue("GlimpseRequestContextHandle", out handle))
             {
-                runtime = (IGlimpseRuntime)context.Items[RuntimeKey];
-                return true;
+                return null;
             }
-            runtime = null;
-            return false;
+            return (GlimpseRequestContextHandle)handle;
         }
 
-        public static void SetGlimpseFactory(this NancyContext context, Factory factory)
+        public static void SetRequestHandle(this NancyContext ctx, GlimpseRequestContextHandle handle)
         {
-            context.Items[FactoryKey] = factory;
+            ctx.Items["GlimpseRequestContextHandle"] = handle;
         }
 
-        public static void SetGlimpseRuntime(this NancyContext context, IGlimpseRuntime runtime)
+        public static IGlimpseRequestContext TryGetRequestContext(this NancyContext ctx)
         {
-            context.Items[RuntimeKey] = runtime;
+            IGlimpseRequestContext request;
+
+            var handle = ctx.GetRequestHandle();
+            if (handle == null || handle.RequestHandlingMode == RequestHandlingMode.Unhandled) return null;
+            if (!GlimpseRuntime.Instance.TryGetRequestContext(handle.GlimpseRequestId, out request)) return null;
+            return request;
         }
     }
 }

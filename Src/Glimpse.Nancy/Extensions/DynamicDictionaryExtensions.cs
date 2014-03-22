@@ -12,5 +12,15 @@ namespace Glimpse.Nancy
                 yield return new KeyValuePair<string, string>(key, dictionary[key]);
             }
         }
+
+        public static IDictionary<string, string> ToDictionary(this DynamicDictionary dictionary)
+        {
+            var d = new Dictionary<string, string>();
+            foreach (var key in dictionary)
+            {
+                d.Add(key, dictionary[key]);
+            }
+            return d;
+        }
     }
 }

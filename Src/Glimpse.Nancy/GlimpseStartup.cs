@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using Glimpse.Core.Configuration;
 using Glimpse.Core.Extensibility;
 using Glimpse.Core.Framework;
 using Nancy;
@@ -9,88 +12,81 @@ namespace Glimpse.Nancy
     public class GlimpseStartup : IApplicationStartup
     {
         private readonly IEnumerable<ITab> tabs;
-        private readonly IEnumerable<IDisplay> displays;
+        private readonly IEnumerable<IInspector> inspectors;
+        private static readonly object InitLock = new object();
+        private static readonly ConcurrentDictionary<string, object> ServerItemsCollection = new ConcurrentDictionary<string, object>();
 
-        public GlimpseStartup(IEnumerable<ITab> tabs, IEnumerable<IDisplay> displays)
+        public GlimpseStartup(IEnumerable<ITab> tabs, IEnumerable<IInspector> inspectors)
         {
             this.tabs = tabs;
-            this.displays = displays;
+            this.inspectors = inspectors;
         }
 
         public void Initialize(IPipelines pipelines)
         {
+            GlimpseRuntime.Initializer.AddInitializationMessage(LoggingLevel.Info, "Added Glimpse.Nancy to Pipelines");
+
             pipelines.BeforeRequest.AddItemToStartOfPipeline(ctx =>
             {
-                var runtime = GetRuntime(ctx);
-                if (runtime.IsInitialized)
-                {
-                    runtime.BeginRequest();
-                }
+                InitializeGlimpse(ctx);
+
+                var requestHandle = GlimpseRuntime.Instance.BeginRequest(GetRequestResponseAdapter(ctx));
+                if (requestHandle.RequestHandlingMode != RequestHandlingMode.Unhandled) ctx.SetRequestHandle(requestHandle);
+
                 return null;
             });
 
             pipelines.BeforeRequest.AddItemToEndOfPipeline(ctx =>
             {
-                // TODO: Read this url from the web.config
-                if (ctx.Request.Path.ToLower() != "/glimpse.axd") return null;
+                if (!GlimpseRuntime.IsAvailable) return null;
 
-                var runtime = GetRuntime(ctx);
-                if (runtime == null) return HttpStatusCode.NotFound;
+                var handle = ctx.GetRequestHandle();
+                if (handle == null || handle.RequestHandlingMode != RequestHandlingMode.ResourceRequest) return null;
 
-                if (runtime.IsInitialized)
-                {
-                    var queryString = (DynamicDictionary)ctx.Request.Query;
-                    string resourceName = queryString["n"];
+                var queryString = (DynamicDictionary)ctx.Request.Query;
+                var resourceName = (string)queryString["n"];
 
-                    ctx.Response = new Response();
-                    if (string.IsNullOrEmpty(resourceName))
-                    {
-                        runtime.ExecuteDefaultResource();
-                    }
-                    else
-                    {
-                        runtime.ExecuteResource(resourceName, new ResourceParameters(BuildQueryStringDictionary(queryString)));
-                    }
-                }
-                return null;
+                ctx.Response = new Response();
+                GlimpseRuntime.Instance.ExecuteResource(handle, resourceName, new ResourceParameters(queryString.ToDictionary()));
+
+                return ctx.Response;
             });
 
             pipelines.AfterRequest.AddItemToEndOfPipeline(ctx =>
             {
-                var runtime = GetRuntime(ctx);
-                if (runtime.IsInitialized)
-                {
-                    runtime.EndRequest();
-                }
+                if (!GlimpseRuntime.IsAvailable) return;
+
+                var handle = ctx.GetRequestHandle();
+                if (handle == null) return;
+
+                GlimpseRuntime.Instance.EndRequest(handle);
             });
         }
 
-        private static IDictionary<string, string> BuildQueryStringDictionary(DynamicDictionary queryString)
+        private IRequestResponseAdapter GetRequestResponseAdapter(NancyContext ctx)
         {
-            var d = new Dictionary<string, string>();
-            foreach (var key in queryString)
-            {
-                d.Add(key, queryString[key]);
-            }
-            return d;
+            return new NancyRequestResponseAdapter(ctx, GlimpseRuntime.Instance.Configuration.Logger);
         }
 
-        private IGlimpseRuntime GetRuntime(NancyContext context)
+        private void InitializeGlimpse(NancyContext ctx)
         {
-            IGlimpseRuntime runtime;
-            if (context.TryGetGlimpseRuntime(out runtime)) return runtime;
+            if (GlimpseRuntime.IsAvailable) return;
 
-            var serviceLocator = new NancyServiceLocator(context);
-            serviceLocator.Tabs = this.tabs;
-            serviceLocator.Displays = this.displays;
+            lock (InitLock)
+            {
+                if (GlimpseRuntime.IsAvailable) return;
 
-            var factory = new Factory(serviceLocator);
-            serviceLocator.Logger = factory.InstantiateLogger();
-            runtime = factory.InstantiateRuntime();
-            runtime.Initialize();
-            context.SetGlimpseRuntime(runtime);
-            context.SetGlimpseFactory(factory);
-            return runtime;
+                GlimpseRuntime.Initializer.AddInitializationMessage(LoggingLevel.Info, "Initializing Glimpse.Nancy Runtime");
+
+                var config = new Configuration(
+                    new NancyEndpointConfiguration(ctx),
+                    new InMemoryPersistenceStore(new DictionaryDataStoreAdapter(ServerItemsCollection))
+                );
+                config.Tabs = this.tabs.ToList();
+                config.Inspectors = this.inspectors.ToList();
+
+                GlimpseRuntime.Initializer.Initialize(config);
+            }
         }
     }
 }

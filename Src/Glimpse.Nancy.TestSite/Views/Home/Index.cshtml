@@ -1,20 +1,43 @@
 ﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <title></title>
-</head>
-<body>
-    <h1>Hello Nancy, meet Glimpse!</h1>
-    <ul>
-        <li><a href="/glimpse.axd">Enable Glimpse</a></li>
-        <li><a href="/greet/Chris">See a route with parameters</a></li>
-    </ul>
+@{
+    this.Layout = "Base";
+}
 
-    <h2>ViewModel</h2>
-    <p>
-        Foo: @Model.Foo<br />
-        Now: @Model.Now
-    </p>
-</body>
-</html>
+@section Content{
+    <div class="pure-g-r">
+        <div class="pure-u-1-3">
+            <div class="pure-menu pure-menu-open">
+
+                <a class="pure-menu-heading">Step One: Enable Glimpse</a>
+                <ul>
+                    <li><a href="/glimpse.axd">Enable Glimpse</a></li>
+                    <li><a href="/_nancy">View Nancy Diagnostics (password: password)</a></li>
+                </ul>
+            </div>
+
+            <div class="pure-menu pure-menu-open">
+                <a class="pure-menu-heading">Step Two: See different routes</a>
+                <ul>
+                    <li><a href="/greet/Chris">See a route with parameters</a></li>
+                    <li><a href="/?auth=true">See an authenticated request</a></li>
+                    <li><a href="#" id="ajaxLoader">Load an AJAX request</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="pure-u-1-3">
+            <ul id="ajaxResult">
+
+            </ul>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(function () {
+            $("#ajaxLoader").click(function () {
+                $.get("/hits", function (data) {
+                    $("#ajaxResult").html("Loaded " + data.length + " records via AJAX");
+                });
+            });
+        });
+    </script>
+}

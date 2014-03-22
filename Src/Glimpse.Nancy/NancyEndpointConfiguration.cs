@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Glimpse.Core.Extensibility;
@@ -38,6 +39,11 @@ namespace Glimpse.Nancy
             }
 
             return stringBuilder.ToString();
+        }
+
+        public override bool IsResourceRequest(Uri requestUri, string endpointBaseUri)
+        {
+            return base.IsResourceRequest(requestUri, context.ToFullPath(endpointBaseUri));
         }
     }
 }

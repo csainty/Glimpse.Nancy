@@ -8,7 +8,7 @@ using Nancy;
 
 namespace Glimpse.Nancy
 {
-    public class NancyFrameworkProvider : IFrameworkProvider
+    public class NancyRequestResponseAdapter : IRequestResponseAdapter
     {
         private static IDataStore ServerStore = new DictionaryDataStore(new Dictionary<string, object>());
 
@@ -16,7 +16,7 @@ namespace Glimpse.Nancy
         private readonly IDataStore contextDataStore;
         private readonly ILogger logger;
 
-        public NancyFrameworkProvider(NancyContext ctx, ILogger logger)
+        public NancyRequestResponseAdapter(NancyContext ctx, ILogger logger)
         {
             this.context = ctx;
             this.logger = logger;
@@ -62,11 +62,12 @@ namespace Glimpse.Nancy
 
         public void SetCookie(string name, string value)
         {
-            this.context.Response.AddCookie(name, value);
+            this.context.Response.WithCookie(name, value);
         }
 
         public void SetHttpResponseHeader(string name, string value)
         {
+            if (name == "Content-Type") this.context.Response.ContentType = value;
             this.context.Response.Headers[name] = value;
         }
 

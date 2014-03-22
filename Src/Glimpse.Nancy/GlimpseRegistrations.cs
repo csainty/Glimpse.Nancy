@@ -16,10 +16,10 @@ namespace Glimpse.Nancy
             get
             {
                 var tabs = AppDomainAssemblyTypeScanner.TypesOf<ITab>();
-                var displays = AppDomainAssemblyTypeScanner.TypesOf<IDisplay>();
+                var inspectors = AppDomainAssemblyTypeScanner.TypesOf<IInspector>();
                 return new[] {
                     new CollectionTypeRegistration(typeof(ITab), tabs),
-                    new CollectionTypeRegistration(typeof(IDisplay), displays),
+                    new CollectionTypeRegistration(typeof(IInspector), inspectors)
                 };
             }
         }

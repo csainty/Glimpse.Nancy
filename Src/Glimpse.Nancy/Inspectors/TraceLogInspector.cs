@@ -1,4 +1,5 @@
 ﻿using System;
+using Glimpse.Core.Framework;
 using Glimpse.Core.Message;
 using Nancy.Bootstrapper;
 
@@ -10,10 +11,12 @@ namespace Glimpse.Nancy.Inspectors
         {
             pipelines.AfterRequest.AddItemToStartOfPipeline(ctx =>
             {
+                if (!GlimpseRuntime.IsAvailable) return;
+
                 var traceMessages = ctx.Trace.TraceLog.ToString().Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
                 if (traceMessages.Length > 0)
                 {
-                    var broker = ctx.GetMessageBroker();
+                    var broker = GlimpseRuntime.Instance.Configuration.MessageBroker;
                     foreach (var msg in traceMessages)
                     {
                         broker.Publish(new TraceMessage

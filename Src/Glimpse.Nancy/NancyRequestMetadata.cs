@@ -62,5 +62,10 @@ namespace Glimpse.Nancy
         {
             get { return (int)this.context.Response.StatusCode; }
         }
+
+        Uri IRequestMetadata.RequestUri
+        {
+            get { return this.context.Request.Url; }
+        }
     }
 }
