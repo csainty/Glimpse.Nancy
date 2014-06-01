@@ -1,7 +1,7 @@
 {
   "name": "Glimpse.Nancy.Build",
-  "version": "1.0.0-rc",
-  "assemblyVersion": "1.0.0",
+  "version": "0.1.0-beta",
+  "assemblyVersion": "0.1.0",
   "description": "Build scripts for Glimpse.Nancy",
   "repository": {
     "type": "git",
