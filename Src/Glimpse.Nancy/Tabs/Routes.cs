@@ -1,11 +1,10 @@
 ﻿using Glimpse.Core.Extensibility;
-using Glimpse.Core.Tab.Assist;
 using Glimpse.Nancy.Models;
 using Nancy;
 
 namespace Glimpse.Nancy.Tabs
 {
-    public class Routes : NancyTab, IKey, ITabLayout
+    public class Routes : NancyTab, IKey
     {
         private readonly INancyModuleCatalog catalog;
 
@@ -28,11 +27,6 @@ namespace Glimpse.Nancy.Tabs
         public string Key
         {
             get { return "glimpse_nancy_routes"; }
-        }
-
-        public object GetLayout()
-        {
-            return TabLayout.Create();
         }
     }
 }
