@@ -4,3 +4,8 @@ Check out the issues board to get involved.
 
 ##Coming Soon!
 Everything is in place and ready to go when Glimpse 2.0 ships.
+
+## Soon? I can't wait that long!
+Pre-built binaries, including the latest Glimpse.Core v2 dll are available from the CI - https://ci.appveyor.com/project/csainty/glimpse-nancy/build/artifacts
+
+[![Build status](https://ci.appveyor.com/api/projects/status/eo826di5drr8vjbn)](https://ci.appveyor.com/project/csainty/glimpse-nancy)
