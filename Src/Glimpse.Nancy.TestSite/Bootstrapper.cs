@@ -47,6 +47,14 @@ namespace Glimpse.Nancy.TestSite
             }
         }
 
+        protected override IEnumerable<System.Type> ViewEngines
+        {
+            get
+            {
+                return Glimpse.Nancy.InternalConfiguration.GlimpseViewEngines(base.ViewEngines);
+            }
+        }
+
         private class User : IUserIdentity
         {
             public IEnumerable<string> Claims

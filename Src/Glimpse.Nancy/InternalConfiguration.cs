@@ -14,5 +14,13 @@ namespace Glimpse.Nancy
             config.ViewResolver = typeof(GlimpseViewResolver<>).MakeGenericType(config.ViewResolver);
             config.ViewLocator = typeof(GlimpseViewLocator<>).MakeGenericType(config.ViewLocator);
         }
+
+        public static IEnumerable<Type> GlimpseViewEngines(IEnumerable<Type> viewEngines)
+        {
+            var wrapperType = typeof(GlimpseViewEngine<>);
+            return viewEngines
+                .Except(new[] { wrapperType })
+                .Select(x => wrapperType.MakeGenericType(x));
+        }
     }
 }
