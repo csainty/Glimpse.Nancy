@@ -13,7 +13,7 @@ namespace Glimpse.Nancy
             }
         }
 
-        public static IDictionary<string, string> ToDictionary(this DynamicDictionary dictionary)
+        public static IDictionary<string, string> ToStringDictionary(this DynamicDictionary dictionary)
         {
             var d = new Dictionary<string, string>();
             foreach (var key in dictionary)

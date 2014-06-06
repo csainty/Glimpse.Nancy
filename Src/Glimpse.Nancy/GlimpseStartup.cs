@@ -47,7 +47,7 @@ namespace Glimpse.Nancy
                 var resourceName = (string)queryString["n"];
 
                 ctx.Response = new Response();
-                GlimpseRuntime.Instance.ExecuteResource(handle, resourceName, new ResourceParameters(queryString.ToDictionary()));
+                GlimpseRuntime.Instance.ExecuteResource(handle, resourceName, new ResourceParameters(queryString.ToStringDictionary()));
 
                 return ctx.Response;
             });
