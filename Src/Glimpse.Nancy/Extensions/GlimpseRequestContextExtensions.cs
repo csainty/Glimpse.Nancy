@@ -20,11 +20,20 @@ namespace Glimpse.Nancy
             PublishToTimeline(result, category, message);
         }
 
+        public static T TimeAction<T>(this IGlimpseRequestContext request, string category, string message, Func<T> action)
+        {
+            var timerName = Guid.NewGuid().ToString();
+            request.StartTimer(timerName);
+            var result = action();
+            request.StopTimer(timerName, category, message);
+            return result;
+        }
+
         private static void PublishToTimeline(TimerResult result, string category, string message)
         {
             GlimpseRuntime.Instance.Configuration.MessageBroker.Publish(new PipelineMessage { Id = Guid.NewGuid() }
                 .AsTimedMessage(result)
-                .AsTimelineMessage(message, new TimelineCategoryItem(category, "#999", "#bbb"))
+                .AsTimelineMessage(message, new TimelineCategoryItem(category, "#000", "#fff"))
             );
         }
 
