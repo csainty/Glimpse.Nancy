@@ -4,7 +4,7 @@ using Nancy.Bootstrapper;
 
 namespace Glimpse.Nancy
 {
-    public class GlimpseRegistrations : IApplicationRegistrations
+    public class GlimpseRegistrations : IRegistrations
     {
         public GlimpseRegistrations()
         {
