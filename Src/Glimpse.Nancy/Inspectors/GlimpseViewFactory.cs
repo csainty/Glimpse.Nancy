@@ -3,11 +3,11 @@ using Nancy.ViewEngines;
 
 namespace Glimpse.Nancy.Inspectors
 {
-    public class GlimpseViewFactory : IViewFactory
+    public class GlimpseViewFactory<T> : IViewFactory where T : IViewFactory
     {
         private readonly IViewFactory viewFactory;
 
-        public GlimpseViewFactory(DefaultViewFactory viewFactory)
+        public GlimpseViewFactory(T viewFactory)
         {
             this.viewFactory = viewFactory;
         }

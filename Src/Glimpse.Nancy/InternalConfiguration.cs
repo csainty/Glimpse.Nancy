@@ -1,6 +1,8 @@
-﻿using Glimpse.Nancy.Inspectors;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Glimpse.Nancy.Inspectors;
 using Nancy.Bootstrapper;
-using Nancy.ViewEngines;
 
 namespace Glimpse.Nancy
 {
@@ -8,9 +10,9 @@ namespace Glimpse.Nancy
     {
         public static void Overrides(NancyInternalConfiguration config)
         {
-            if (config.ViewFactory == typeof(DefaultViewFactory)) config.ViewFactory = typeof(GlimpseViewFactory);
-            if (config.ViewResolver == typeof(DefaultViewResolver)) config.ViewResolver = typeof(GlimpseViewResolver);
-            if (config.ViewLocator == typeof(DefaultViewLocator)) config.ViewLocator = typeof(GlimpseViewLocator);
+            config.ViewFactory = typeof(GlimpseViewFactory<>).MakeGenericType(config.ViewFactory);
+            config.ViewResolver = typeof(GlimpseViewResolver<>).MakeGenericType(config.ViewResolver);
+            config.ViewLocator = typeof(GlimpseViewLocator<>).MakeGenericType(config.ViewLocator);
         }
     }
 }

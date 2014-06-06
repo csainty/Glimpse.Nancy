@@ -4,11 +4,11 @@ using Nancy.ViewEngines;
 
 namespace Glimpse.Nancy.Inspectors
 {
-    public class GlimpseViewLocator : IViewLocator
+    public class GlimpseViewLocator<T> : IViewLocator where T : IViewLocator
     {
         private readonly IViewLocator viewLocator;
 
-        public GlimpseViewLocator(DefaultViewLocator viewLocator)
+        public GlimpseViewLocator(T viewLocator)
         {
             this.viewLocator = viewLocator;
         }

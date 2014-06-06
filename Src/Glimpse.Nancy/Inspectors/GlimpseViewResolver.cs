@@ -2,11 +2,11 @@
 
 namespace Glimpse.Nancy.Inspectors
 {
-    public class GlimpseViewResolver : IViewResolver
+    public class GlimpseViewResolver<T> : IViewResolver where T : IViewResolver
     {
         private readonly IViewResolver viewResolver;
 
-        public GlimpseViewResolver(DefaultViewResolver viewResolver)
+        public GlimpseViewResolver(T viewResolver)
         {
             this.viewResolver = viewResolver;
         }
