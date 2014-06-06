@@ -35,17 +35,14 @@ namespace Glimpse.Nancy
 
         public void InjectHttpResponseBody(string htmlSnippet)
         {
-            var capturedContent = new MemoryStream();
-            this.context.Response.Contents(capturedContent);
-            capturedContent.Seek(0, SeekOrigin.Begin);
+            var originalAction = this.context.Response.Contents;
 
             // TODO: UTF8?
             this.context.Response.Contents = s =>
             {
                 using (var filter = new PreBodyTagFilter(htmlSnippet, s, Encoding.UTF8, this.logger))
                 {
-                    capturedContent.CopyTo(filter);
-                    capturedContent.Dispose();
+                    originalAction(filter);
                 }
             };
         }
