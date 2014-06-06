@@ -1,7 +1,4 @@
-﻿using System;
-using Glimpse.Core.Framework;
-using Glimpse.Core.Message;
-using Nancy.Bootstrapper;
+﻿using Nancy.Bootstrapper;
 
 namespace Glimpse.Nancy.Inspectors
 {
@@ -9,23 +6,12 @@ namespace Glimpse.Nancy.Inspectors
     {
         public void Initialize(IPipelines pipelines)
         {
-            pipelines.AfterRequest.AddItemToStartOfPipeline(ctx =>
+            pipelines.BeforeRequest.AddItemToStartOfPipeline(ctx =>
             {
-                if (!GlimpseRuntime.IsAvailable) return;
+                if (ctx.Trace == null || ctx.Trace.TraceLog == null) return null;
 
-                var traceMessages = ctx.Trace.TraceLog.ToString().Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-                if (traceMessages.Length > 0)
-                {
-                    var broker = GlimpseRuntime.Instance.Configuration.MessageBroker;
-                    foreach (var msg in traceMessages)
-                    {
-                        broker.Publish(new TraceMessage
-                        {
-                            Message = msg,
-                            Category = "Nancy.TraceLog"
-                        });
-                    }
-                }
+                ctx.Trace.TraceLog = new GlimpseWrappedTraceLog(ctx.Trace.TraceLog, ctx);
+                return null;
             });
         }
     }

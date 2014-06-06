@@ -52,6 +52,7 @@
     <Compile Include="GlimpseRegistrations.cs" />
     <Compile Include="GlimpseStartup.cs" />
     <Compile Include="DictionaryDataStore.cs" />
+    <Compile Include="Inspectors\GlimpseWrappedTraceLog.cs" />
     <Compile Include="Inspectors\PipelineInspector.cs" />
     <Compile Include="Inspectors\TraceLogInspector.cs" />
     <Compile Include="Models\AuthenticationModel.cs" />
