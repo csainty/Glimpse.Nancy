@@ -2,7 +2,7 @@
 using Nancy;
 using Nancy.ViewEngines;
 
-namespace Glimpse.Nancy.Inspectors
+namespace Glimpse.Nancy.Wrappers
 {
     public class GlimpseViewLocator<T> : IViewLocator where T : IViewLocator
     {

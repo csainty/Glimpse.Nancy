@@ -1,4 +1,5 @@
-﻿using Nancy.Bootstrapper;
+﻿using Glimpse.Nancy.Wrappers;
+using Nancy.Bootstrapper;
 
 namespace Glimpse.Nancy.Inspectors
 {
@@ -10,7 +11,7 @@ namespace Glimpse.Nancy.Inspectors
             {
                 if (ctx.Trace == null || ctx.Trace.TraceLog == null) return null;
 
-                ctx.Trace.TraceLog = new GlimpseWrappedTraceLog(ctx.Trace.TraceLog, ctx);
+                ctx.Trace.TraceLog = new GlimpseTraceLog(ctx.Trace.TraceLog, ctx);
                 return null;
             });
         }

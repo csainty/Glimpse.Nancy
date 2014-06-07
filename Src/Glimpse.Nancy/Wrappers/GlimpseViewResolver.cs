@@ -1,6 +1,6 @@
 ﻿using Nancy.ViewEngines;
 
-namespace Glimpse.Nancy.Inspectors
+namespace Glimpse.Nancy.Wrappers
 {
     public class GlimpseViewResolver<T> : IViewResolver where T : IViewResolver
     {

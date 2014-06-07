@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Glimpse.Nancy.Inspectors;
+using Glimpse.Nancy.Wrappers;
 using Nancy.Bootstrapper;
 
 namespace Glimpse.Nancy
