@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Glimpse.Nancy.Wrappers;
 using Nancy;
 using Nancy.ViewEngines;
 
@@ -27,7 +28,18 @@ namespace Glimpse.Nancy.Models
             this.viewEngine = viewEngine;
         }
 
-        public string Name { get { return this.viewEngine.GetType().Name; } }
+        public string Name
+        {
+            get
+            {
+                var type = this.viewEngine.GetType();
+                if (type.IsConstructedGenericType && type.GetGenericTypeDefinition() == typeof(GlimpseViewEngine<>))
+                {
+                    type = type.GetGenericArguments()[0];
+                }
+                return type.FullName;
+            }
+        }
 
         public IEnumerable<string> Extensions { get { return this.viewEngine.Extensions; } }
     }
