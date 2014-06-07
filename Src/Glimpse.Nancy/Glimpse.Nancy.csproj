@@ -52,6 +52,7 @@
     <Compile Include="GlimpseRegistrations.cs" />
     <Compile Include="GlimpseStartup.cs" />
     <Compile Include="DictionaryDataStore.cs" />
+    <Compile Include="Wrappers\GlimpseBinder.cs" />
     <Compile Include="Wrappers\GlimpseRouteResolver.cs" />
     <Compile Include="Wrappers\GlimpseViewEngine.cs" />
     <Compile Include="Wrappers\GlimpseViewFactory.cs" />

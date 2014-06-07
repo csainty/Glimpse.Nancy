@@ -1,6 +1,7 @@
 ﻿using System;
 using Dapper;
 using Nancy;
+using Nancy.ModelBinding;
 
 namespace Glimpse.Nancy.TestSite
 {
@@ -27,7 +28,8 @@ namespace Glimpse.Nancy.TestSite
 
             Get["/greet/{name}"] = _ =>
             {
-                return View["Greet", new { Name = _.name }];
+                var user = this.Bind<Model>();
+                return View["Greet", user];
             };
 
             Get["/hits"] = _ =>
@@ -41,6 +43,11 @@ namespace Glimpse.Nancy.TestSite
                         .WithAllowedMediaRange("text/json");
                 }
             };
+        }
+
+        public class Model
+        {
+            public string Name { get; set; }
         }
     }
 }
