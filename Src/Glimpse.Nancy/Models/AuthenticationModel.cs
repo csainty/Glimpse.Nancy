@@ -4,7 +4,7 @@ using global::Nancy.Security;
 
 namespace Glimpse.Nancy.Models
 {
-    public class AuthenticationModel
+    internal class AuthenticationModel
     {
         private IUserIdentity userIdentity;
 

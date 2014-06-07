@@ -4,7 +4,7 @@ using Nancy.ViewEngines;
 
 namespace Glimpse.Nancy.Wrappers
 {
-    public class GlimpseViewLocator<T> : IViewLocator where T : IViewLocator
+    internal class GlimpseViewLocator<T> : IViewLocator where T : IViewLocator
     {
         private readonly IViewLocator viewLocator;
 

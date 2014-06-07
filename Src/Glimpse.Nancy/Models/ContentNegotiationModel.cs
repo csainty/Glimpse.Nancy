@@ -4,7 +4,7 @@ using Nancy.Responses.Negotiation;
 
 namespace Glimpse.Nancy.Models
 {
-    public class ContentNegotiationModel
+    internal class ContentNegotiationModel
     {
         public ContentNegotiationModel(NancyContext ctx)
         {

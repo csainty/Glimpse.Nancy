@@ -2,7 +2,7 @@
 
 namespace Glimpse.Nancy.Wrappers
 {
-    public class GlimpseViewResolver<T> : IViewResolver where T : IViewResolver
+    internal class GlimpseViewResolver<T> : IViewResolver where T : IViewResolver
     {
         private readonly IViewResolver viewResolver;
 

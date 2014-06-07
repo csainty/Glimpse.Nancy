@@ -3,7 +3,7 @@ using Nancy;
 
 namespace Glimpse.Nancy
 {
-    public static class TabContextExtensions
+    internal static class TabContextExtensions
     {
         public static NancyContext GetNancyContext(this ITabContext tabContext)
         {

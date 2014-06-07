@@ -3,7 +3,7 @@ using Nancy.ViewEngines;
 
 namespace Glimpse.Nancy.Wrappers
 {
-    public class GlimpseViewFactory<T> : IViewFactory where T : IViewFactory
+    internal class GlimpseViewFactory<T> : IViewFactory where T : IViewFactory
     {
         private readonly IViewFactory viewFactory;
 

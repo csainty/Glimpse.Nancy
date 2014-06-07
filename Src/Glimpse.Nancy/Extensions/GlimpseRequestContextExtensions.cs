@@ -5,7 +5,7 @@ using Glimpse.Core.Message;
 
 namespace Glimpse.Nancy
 {
-    public static class GlimpseRequestContextExtensions
+    internal static class GlimpseRequestContextExtensions
     {
         public static void StartTimer(this IGlimpseRequestContext request, string timerName)
         {

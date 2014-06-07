@@ -9,7 +9,7 @@ using Nancy.Bootstrapper;
 
 namespace Glimpse.Nancy.Models
 {
-    public class InfoModel
+    internal class InfoModel
     {
         private readonly IRootPathProvider rootPathProvider;
 

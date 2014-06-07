@@ -9,7 +9,7 @@ using Nancy.Extensions;
 
 namespace Glimpse.Nancy
 {
-    public class NancyEndpointConfiguration : ResourceEndpointConfiguration
+    internal class NancyEndpointConfiguration : ResourceEndpointConfiguration
     {
         private readonly NancyContext context;
 

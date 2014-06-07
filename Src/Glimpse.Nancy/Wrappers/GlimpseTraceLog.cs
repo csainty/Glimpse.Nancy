@@ -7,7 +7,7 @@ using Nancy.Diagnostics;
 
 namespace Glimpse.Nancy.Wrappers
 {
-    public class GlimpseTraceLog : ITraceLog
+    internal class GlimpseTraceLog : ITraceLog
     {
         private readonly ITraceLog log;
         private readonly NancyContext context;

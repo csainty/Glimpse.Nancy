@@ -6,7 +6,7 @@ using Nancy.Extensions;
 
 namespace Glimpse.Nancy
 {
-    public class NancyRequestMetadata : IRequestMetadata
+    internal class NancyRequestMetadata : IRequestMetadata
     {
         private readonly NancyContext context;
 

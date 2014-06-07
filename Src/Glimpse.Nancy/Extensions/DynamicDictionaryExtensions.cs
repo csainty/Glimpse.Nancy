@@ -3,7 +3,7 @@ using Nancy;
 
 namespace Glimpse.Nancy
 {
-    public static class DynamicDictionaryExtensions
+    internal static class DynamicDictionaryExtensions
     {
         public static IEnumerable<KeyValuePair<string, string>> Serialize(this DynamicDictionary dictionary)
         {

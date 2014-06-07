@@ -4,7 +4,7 @@ using Nancy.ViewEngines;
 
 namespace Glimpse.Nancy.Wrappers
 {
-    public class GlimpseViewEngine<T> : IViewEngine where T : IViewEngine
+    internal class GlimpseViewEngine<T> : IViewEngine where T : IViewEngine
     {
         private readonly IViewEngine viewEngine;
 

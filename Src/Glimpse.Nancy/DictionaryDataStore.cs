@@ -3,7 +3,7 @@ using Glimpse.Core.Extensibility;
 
 namespace Glimpse.Nancy
 {
-    public class DictionaryDataStore : IDataStore
+    internal class DictionaryDataStore : IDataStore
     {
         private readonly IDictionary<string, object> items;
 

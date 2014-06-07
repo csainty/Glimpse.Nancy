@@ -6,7 +6,7 @@ using Nancy.Routing;
 
 namespace Glimpse.Nancy.Models
 {
-    public class RoutesModel : List<RouteModel>
+    internal class RoutesModel : List<RouteModel>
     {
         public RoutesModel(NancyContext ctx, INancyModuleCatalog catalog)
         {
@@ -17,7 +17,7 @@ namespace Glimpse.Nancy.Models
         }
     }
 
-    public class RouteModel
+    internal class RouteModel
     {
         private readonly Route route;
         private readonly INancyModule module;

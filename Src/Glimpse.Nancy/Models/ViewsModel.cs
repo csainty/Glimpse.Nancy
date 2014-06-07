@@ -5,7 +5,7 @@ using Nancy.ViewEngines;
 
 namespace Glimpse.Nancy.Models
 {
-    public class ViewsModel
+    internal class ViewsModel
     {
         public ViewsModel(NancyContext ctx, IEnumerable<IViewEngine> viewEngines, IEnumerable<ViewLocationResult> discoveredViews)
         {
@@ -18,7 +18,7 @@ namespace Glimpse.Nancy.Models
         public IEnumerable<ViewLocationModel> Views { get; set; }
     }
 
-    public class ViewEngineModel
+    internal class ViewEngineModel
     {
         private readonly IViewEngine viewEngine;
 
@@ -32,7 +32,7 @@ namespace Glimpse.Nancy.Models
         public IEnumerable<string> Extensions { get { return this.viewEngine.Extensions; } }
     }
 
-    public class ViewLocationModel
+    internal class ViewLocationModel
     {
         private readonly ViewLocationResult result;
 

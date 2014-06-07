@@ -5,7 +5,7 @@ using Glimpse.Core.Extensibility;
 
 namespace Glimpse.Nancy.Filters
 {
-    public class PreBodyTagFilter : Stream
+    internal class PreBodyTagFilter : Stream
     {
         private static Regex BodyEnd = new Regex("</body>", RegexOptions.Compiled | RegexOptions.Multiline);
 

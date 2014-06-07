@@ -9,7 +9,7 @@ using Nancy.Routing;
 
 namespace Glimpse.Nancy.Models
 {
-    public class RequestModel
+    internal class RequestModel
     {
         private readonly NancyContext context;
         private readonly IRootPathProvider rootPathProvider;

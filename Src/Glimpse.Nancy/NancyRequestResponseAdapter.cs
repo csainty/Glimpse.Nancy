@@ -8,7 +8,7 @@ using Nancy;
 
 namespace Glimpse.Nancy
 {
-    public class NancyRequestResponseAdapter : IRequestResponseAdapter
+    internal class NancyRequestResponseAdapter : IRequestResponseAdapter
     {
         private static IDataStore ServerStore = new DictionaryDataStore(new Dictionary<string, object>());
 
