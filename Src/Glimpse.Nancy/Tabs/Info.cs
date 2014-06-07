@@ -1,7 +1,9 @@
-﻿using Glimpse.Core.Extensibility;
+﻿using System.Collections.Generic;
+using Glimpse.Core.Extensibility;
 using Glimpse.Nancy.Models;
 using Nancy;
 using Nancy.Bootstrapper;
+using Nancy.ErrorHandling;
 
 namespace Glimpse.Nancy.Tabs
 {
@@ -9,17 +11,19 @@ namespace Glimpse.Nancy.Tabs
     {
         private readonly IRootPathProvider rootPathProvider;
         private readonly NancyInternalConfiguration configuration;
+        private readonly IEnumerable<IStatusCodeHandler> statusCodeHandlers;
 
-        public Info(IRootPathProvider rootPathProvider, NancyInternalConfiguration configuration)
+        public Info(IRootPathProvider rootPathProvider, NancyInternalConfiguration configuration, IEnumerable<IStatusCodeHandler> statusCodeHandlers)
         {
             this.rootPathProvider = rootPathProvider;
             this.configuration = configuration;
+            this.statusCodeHandlers = statusCodeHandlers;
         }
 
         public override object GetData(ITabContext context)
         {
             var ctx = context.GetNancyContext();
-            return new InfoModel(rootPathProvider, configuration);
+            return new InfoModel(rootPathProvider, configuration, statusCodeHandlers);
         }
 
         public override string Name

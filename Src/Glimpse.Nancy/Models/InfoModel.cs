@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using Nancy;
 using Nancy.Bootstrapper;
+using Nancy.ErrorHandling;
 
 namespace Glimpse.Nancy.Models
 {
@@ -15,7 +16,7 @@ namespace Glimpse.Nancy.Models
 
         private static readonly IEnumerable<Type> SettingTypes = new[] { typeof(StaticConfiguration) }.Union(typeof(StaticConfiguration).GetNestedTypes(BindingFlags.Static | BindingFlags.Public));
 
-        public InfoModel(IRootPathProvider rootPathProvider, NancyInternalConfiguration configuration)
+        public InfoModel(IRootPathProvider rootPathProvider, NancyInternalConfiguration configuration, IEnumerable<IStatusCodeHandler> statusCodeHandlers)
         {
             this.rootPathProvider = rootPathProvider;
 
@@ -41,6 +42,8 @@ namespace Glimpse.Nancy.Models
                            Name = Regex.Replace(property.Name, "[A-Z]", " $0"),
                            Value = value
                        };
+
+            StatusCodeHandlers = statusCodeHandlers.Select(x => x.GetType().FullName);
         }
 
         public string NancyVersion { get { return string.Format("v{0}", typeof(NancyContext).Assembly.GetName().Version.ToString()); } }
@@ -82,6 +85,8 @@ namespace Glimpse.Nancy.Models
         public Dictionary<string, IEnumerable<string>> Configuration { get; set; }
 
         public IEnumerable<SettingsModel> Settings { get; set; }
+
+        public IEnumerable<string> StatusCodeHandlers { get; set; }
 
         public class SettingsModel
         {
