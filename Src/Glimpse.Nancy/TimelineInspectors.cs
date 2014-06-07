@@ -15,6 +15,7 @@ namespace Glimpse.Nancy
             config.ViewLocator = typeof(GlimpseViewLocator<>).MakeGenericType(config.ViewLocator);
             config.RouteResolver = typeof(GlimpseRouteResolver<>).MakeGenericType(config.RouteResolver);
             config.Binder = typeof(GlimpseBinder<>).MakeGenericType(config.Binder);
+            config.RouteInvoker = typeof(GlimpseRouteInvoker<>).MakeGenericType(config.RouteInvoker);
         }
 
         public static IEnumerable<Type> InspectViewEngines(IEnumerable<Type> viewEngines)

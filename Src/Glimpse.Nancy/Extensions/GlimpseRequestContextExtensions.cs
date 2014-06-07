@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Glimpse.Core.Extensibility;
 using Glimpse.Core.Framework;
 using Glimpse.Core.Message;
@@ -27,6 +28,17 @@ namespace Glimpse.Nancy
             var result = action();
             request.StopTimer(timerName, category, message);
             return result;
+        }
+
+        public static Task<T> TimeTask<T>(this IGlimpseRequestContext request, string category, string message, Func<Task<T>> action)
+        {
+            var timerName = Guid.NewGuid().ToString();
+            request.StartTimer(timerName);
+            return action().ContinueWith(task =>
+            {
+                request.StopTimer(timerName, category, message);
+                return task.Result;
+            });
         }
 
         private static void PublishToTimeline(TimerResult result, string category, string message)
