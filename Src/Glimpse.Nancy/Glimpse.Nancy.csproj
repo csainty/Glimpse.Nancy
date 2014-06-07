@@ -59,7 +59,7 @@
     <Compile Include="Wrappers\GlimpseTraceLog.cs" />
     <Compile Include="Inspectors\PipelineInspector.cs" />
     <Compile Include="Inspectors\TraceLogInspector.cs" />
-    <Compile Include="InternalConfiguration.cs" />
+    <Compile Include="TimelineInspectors.cs" />
     <Compile Include="Models\AuthenticationModel.cs" />
     <Compile Include="Models\ContentNegotiationModel.cs" />
     <Compile Include="Models\InfoModel.cs" />

@@ -43,7 +43,7 @@ namespace Glimpse.Nancy.TestSite
         {
             get
             {
-                return NancyInternalConfiguration.WithOverrides(Glimpse.Nancy.InternalConfiguration.Overrides);
+                return NancyInternalConfiguration.WithOverrides(Glimpse.Nancy.TimelineInspectors.Enable);
             }
         }
 
@@ -51,7 +51,7 @@ namespace Glimpse.Nancy.TestSite
         {
             get
             {
-                return Glimpse.Nancy.InternalConfiguration.GlimpseViewEngines(base.ViewEngines);
+                return Glimpse.Nancy.TimelineInspectors.InspectViewEngines(base.ViewEngines);
             }
         }
 

@@ -6,16 +6,16 @@ using Nancy.Bootstrapper;
 
 namespace Glimpse.Nancy
 {
-    public static class InternalConfiguration
+    public static class TimelineInspectors
     {
-        public static void Overrides(NancyInternalConfiguration config)
+        public static void Enable(NancyInternalConfiguration config)
         {
             config.ViewFactory = typeof(GlimpseViewFactory<>).MakeGenericType(config.ViewFactory);
             config.ViewResolver = typeof(GlimpseViewResolver<>).MakeGenericType(config.ViewResolver);
             config.ViewLocator = typeof(GlimpseViewLocator<>).MakeGenericType(config.ViewLocator);
         }
 
-        public static IEnumerable<Type> GlimpseViewEngines(IEnumerable<Type> viewEngines)
+        public static IEnumerable<Type> InspectViewEngines(IEnumerable<Type> viewEngines)
         {
             var wrapperType = typeof(GlimpseViewEngine<>);
             return viewEngines
