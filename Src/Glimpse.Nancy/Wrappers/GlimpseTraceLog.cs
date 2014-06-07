@@ -5,16 +5,16 @@ using Glimpse.Core.Message;
 using Nancy;
 using Nancy.Diagnostics;
 
-namespace Glimpse.Nancy.Inspectors
+namespace Glimpse.Nancy.Wrappers
 {
-    public class GlimpseWrappedTraceLog : ITraceLog
+    public class GlimpseTraceLog : ITraceLog
     {
         private readonly ITraceLog log;
         private readonly NancyContext context;
         private TimeSpan lastOffset = TimeSpan.Zero;
         private bool hasPublishedExistingMessages = false;
 
-        public GlimpseWrappedTraceLog(ITraceLog wrappedLog, NancyContext context)
+        public GlimpseTraceLog(ITraceLog wrappedLog, NancyContext context)
         {
             this.log = wrappedLog;
             this.context = context;

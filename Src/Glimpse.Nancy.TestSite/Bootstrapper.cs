@@ -39,6 +39,22 @@ namespace Glimpse.Nancy.TestSite
             get { return new DiagnosticsConfiguration { Password = @"password" }; }
         }
 
+        protected override NancyInternalConfiguration InternalConfiguration
+        {
+            get
+            {
+                return NancyInternalConfiguration.WithOverrides(Glimpse.Nancy.TimelineInspectors.Enable);
+            }
+        }
+
+        protected override IEnumerable<System.Type> ViewEngines
+        {
+            get
+            {
+                return Glimpse.Nancy.TimelineInspectors.InspectViewEngines(base.ViewEngines);
+            }
+        }
+
         private class User : IUserIdentity
         {
             public IEnumerable<string> Claims
