@@ -51,7 +51,7 @@
     <Compile Include="Extensions\NancyContextExtensions.cs" />
     <Compile Include="GlimpseRegistrations.cs" />
     <Compile Include="GlimpseStartup.cs" />
-    <Compile Include="DictionaryDataStore.cs" />
+    <Compile Include="LateWrappingStream.cs" />
     <Compile Include="Wrappers\GlimpseBinder.cs" />
     <Compile Include="Wrappers\GlimpseRouteInvoker.cs" />
     <Compile Include="Wrappers\GlimpseRouteResolver.cs" />
@@ -71,7 +71,6 @@
     <Compile Include="NancyEndpointConfiguration.cs" />
     <Compile Include="NancyRequestResponseAdapter.cs" />
     <Compile Include="NancyRequestMetadata.cs" />
-    <Compile Include="Filters\PreBodyTagFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Extensions\TabContextExtensions.cs" />
     <Compile Include="Tabs\Authentication.cs" />

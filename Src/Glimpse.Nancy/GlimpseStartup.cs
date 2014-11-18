@@ -65,7 +65,7 @@ namespace Glimpse.Nancy
 
         private IRequestResponseAdapter GetRequestResponseAdapter(NancyContext ctx)
         {
-            return new NancyRequestResponseAdapter(ctx, GlimpseRuntime.Instance.Configuration.Logger);
+            return new NancyRequestResponseAdapter(ctx);
         }
 
         private void InitializeGlimpse(NancyContext ctx)
