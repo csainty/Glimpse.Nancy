@@ -1,3 +1,9 @@
+#Deprecation Notice
+This work was based on early Glimpse 2.0 releases that never became official releases.
+Since then the Glimpse roadmap has changed and I have not evaluated this against those plans.
+
+---
+
 #Glimpse.Nancy
 Uniting two of the best .NET open source projects around!  
 Check out the issues board to get involved.
